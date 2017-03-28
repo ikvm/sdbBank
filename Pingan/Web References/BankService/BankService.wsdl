@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://webservice.bank.com" xmlns:ns1="http://org.apache.axis2/xsd" targetNamespace="http://webservice.bank.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>BankService</wsdl:documentation>
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webservice.bank.com">
+      <xs:element name="sayHello">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sayHelloResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="BankServiceException">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="BankServiceException" nillable="true" type="ns:Exception" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="Exception">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="JavaRsaVerifyDecode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="orig" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="sign" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="JavaRsaVerifyDecodeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="JavaRsaVerify">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="orig" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="sign" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="JavaRsaVerifyResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="sayHelloRequest">
+    <wsdl:part name="parameters" element="ns:sayHello" />
+  </wsdl:message>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part name="parameters" element="ns:sayHelloResponse" />
+  </wsdl:message>
+  <wsdl:message name="JavaRsaVerifyDecodeRequest">
+    <wsdl:part name="parameters" element="ns:JavaRsaVerifyDecode" />
+  </wsdl:message>
+  <wsdl:message name="JavaRsaVerifyDecodeResponse">
+    <wsdl:part name="parameters" element="ns:JavaRsaVerifyDecodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="BankServiceException">
+    <wsdl:part name="parameters" element="ns:BankServiceException" />
+  </wsdl:message>
+  <wsdl:message name="JavaRsaVerifyRequest">
+    <wsdl:part name="parameters" element="ns:JavaRsaVerify" />
+  </wsdl:message>
+  <wsdl:message name="JavaRsaVerifyResponse">
+    <wsdl:part name="parameters" element="ns:JavaRsaVerifyResponse" />
+  </wsdl:message>
+  <wsdl:portType name="BankServicePortType">
+    <wsdl:operation name="sayHello">
+      <wsdl:input wsaw:Action="urn:sayHello" message="ns:sayHelloRequest" />
+      <wsdl:output wsaw:Action="urn:sayHelloResponse" message="ns:sayHelloResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerifyDecode">
+      <wsdl:input wsaw:Action="urn:JavaRsaVerifyDecode" message="ns:JavaRsaVerifyDecodeRequest" />
+      <wsdl:output wsaw:Action="urn:JavaRsaVerifyDecodeResponse" message="ns:JavaRsaVerifyDecodeResponse" />
+      <wsdl:fault wsaw:Action="urn:JavaRsaVerifyDecodeBankServiceException" name="BankServiceException" message="ns:BankServiceException" />
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerify">
+      <wsdl:input wsaw:Action="urn:JavaRsaVerify" message="ns:JavaRsaVerifyRequest" />
+      <wsdl:output wsaw:Action="urn:JavaRsaVerifyResponse" message="ns:JavaRsaVerifyResponse" />
+      <wsdl:fault wsaw:Action="urn:JavaRsaVerifyBankServiceException" name="BankServiceException" message="ns:BankServiceException" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BankServiceSoap11Binding" type="ns:BankServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="sayHello">
+      <soap:operation soapAction="urn:sayHello" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerifyDecode">
+      <soap:operation soapAction="urn:JavaRsaVerifyDecode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault use="literal" name="BankServiceException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerify">
+      <soap:operation soapAction="urn:JavaRsaVerify" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault use="literal" name="BankServiceException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BankServiceSoap12Binding" type="ns:BankServicePortType">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="sayHello">
+      <soap12:operation soapAction="urn:sayHello" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerifyDecode">
+      <soap12:operation soapAction="urn:JavaRsaVerifyDecode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap12:fault use="literal" name="BankServiceException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerify">
+      <soap12:operation soapAction="urn:JavaRsaVerify" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap12:fault use="literal" name="BankServiceException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BankServiceHttpBinding" type="ns:BankServicePortType">
+    <http:binding verb="POST" />
+    <wsdl:operation name="sayHello">
+      <http:operation location="sayHello" />
+      <wsdl:input>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerifyDecode">
+      <http:operation location="JavaRsaVerifyDecode" />
+      <wsdl:input>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException" />
+    </wsdl:operation>
+    <wsdl:operation name="JavaRsaVerify">
+      <http:operation location="JavaRsaVerify" />
+      <wsdl:input>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException" />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BankService">
+    <wsdl:port name="BankServiceHttpSoap11Endpoint" binding="ns:BankServiceSoap11Binding">
+      <soap:address location="http://localhost:8080/axis2/services/BankService.BankServiceHttpSoap11Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="BankServiceHttpSoap12Endpoint" binding="ns:BankServiceSoap12Binding">
+      <soap12:address location="http://localhost:8080/axis2/services/BankService.BankServiceHttpSoap12Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="BankServiceHttpEndpoint" binding="ns:BankServiceHttpBinding">
+      <http:address location="http://localhost:8080/axis2/services/BankService.BankServiceHttpEndpoint/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -15,7 +15,7 @@ namespace sdbBank
     {
         private static char[] bcdLookup = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-     public   static string pemFile =SDKConfig.SignCertPath;
+     public   static string pemFile =SDKConfig.SignPFXPath;
         public static string RsaKeyPass = "changeit";
         public static string sdbPaySign(string strdata)
         {

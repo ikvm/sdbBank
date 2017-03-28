@@ -2,17 +2,77 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using BankPackage;
+using CCBSign;
+using Org.BouncyCastle.Asn1.X9;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Boolean = java.lang.Boolean;
 
 namespace sdbBank
 {
  public static class SignCheck
     {
-        public static bool isValidSignature(string strToSign, string strSign, string publicKey)
+
+        /// <summary>
+        /// java版本的验签
+        /// </summary>
+        /// <param name="strToSign"></param>
+        /// <param name="strSign"></param>
+        /// <returns></returns>
+        public static bool JavaRsaVerify(string strToSign, string strSign)
         {
-            byte[] bSource = Encoding.UTF8.GetBytes(strToSign);
+            testRSA t=new testRSA();
+          Boolean cc=  t.JavaRsaVerify(strToSign, strSign);
+
+            return Convert.ToBoolean(cc);
+        }
+        /// <summary>      
+        /// RSA公钥格式转换，java->.net      
+        /// </summary>      
+        /// <param name="publicKey">java生成的公钥</param>      
+        /// <returns></returns>      
+        public static string RSAPublicKeyJava2DotNet(this string publicKey)
+        {
+            RsaKeyParameters publicKeyParam = (RsaKeyParameters)PublicKeyFactory.CreateKey(Convert.FromBase64String(publicKey));
+            return string.Format("<RSAKeyValue><Modulus>{0}</Modulus><Exponent>{1}</Exponent></RSAKeyValue>",
+                Convert.ToBase64String(publicKeyParam.Modulus.ToByteArrayUnsigned()),
+                Convert.ToBase64String(publicKeyParam.Exponent.ToByteArrayUnsigned()));
+        }
+
+        public static bool verifyData(string strToSign, string strSign)
+        {
+   
+
+
+            //  X509Certificate2 objx5092;
+            //  string password = "changeit";
+            //  if (string.IsNullOrWhiteSpace(password))
+            //  {
+            //      objx5092 = new X509Certificate2(SDKConfig.SignPFXPath);
+            //  }
+            //  else
+            //  {
+            //      objx5092 = new X509Certificate2(SDKConfig.SignPFXPath, "changeit");
+            //  }
+            //string publicKey = objx5092.GetPublicKeyString();
+            string publicKey = RSAPublicKeyJava2DotNet(SDKConfig.sdbPublicKey);
+            var cc = RSAHelper.VerifyData(publicKey, strToSign, strSign);
+
+        var tt=    RSAFromPkcs8.verify(strToSign, strSign, SDKConfig.sdbPublicKey, "utf-8");  //GBK    utf-8
+            return isValidSignature(strToSign, strSign, SDKConfig.sdbPublicKey);
+        }
+      
+
+        private static bool isValidSignature(string strToSign, string strSign, string publicKey)
+        {
+            byte[] bSource = Encoding.GetEncoding("GBK").GetBytes(strToSign);
+        //    byte[] bSource = Encoding.UTF8.GetBytes(strToSign);
             byte[] bSigdat = Convert.FromBase64String(strSign);
             byte[] bCert = null;
             try

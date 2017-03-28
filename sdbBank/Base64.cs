@@ -46,16 +46,17 @@ namespace sdbBank
         /// <summary>
         /// Base64解密
         /// </summary>
-        /// <param name="codeName">解密采用的编码方式，注意和加密时采用的方式一致</param>
-        /// <param name="result">待解密的密文</param>
+  /// <param name="result">待解密的密文</param>
+        ///   <param name="code_type">解密采用的编码方式，注意和加密时采用的方式一致</param>
         /// <returns>解密后的字符串</returns>
-        public static string DecodeBase64(Encoding encode, string result)
+        public static string DecodeBase64(string result, string code_type)
         {
             string decode = "";
             byte[] bytes = Convert.FromBase64String(result);
             try
             {
-                decode = encode.GetString(bytes);
+                decode = Encoding.GetEncoding(code_type).GetString(bytes);
+         
             }
             catch
             {
@@ -71,7 +72,24 @@ namespace sdbBank
         /// <returns>解密后的字符串</returns>
         public static string DecodeBase64(string result)
         {
-            return DecodeBase64(Encoding.UTF8, result);
+            return DecodeBase64Default( result, Encoding.UTF8);
+        }
+
+
+        public static string DecodeBase64Default(string result, Encoding code_type)
+        {
+            string decode = "";
+            byte[] bytes = Convert.FromBase64String(result);
+            try
+            {
+                decode = code_type.GetString(bytes);
+
+            }
+            catch
+            {
+                decode = result;
+            }
+            return decode;
         }
     }
 }

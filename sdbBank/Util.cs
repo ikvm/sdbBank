@@ -11,6 +11,102 @@ namespace sdbBank
    public  class Util
     {
 
+        /// <summary>
+        /// 创建提交的数据test
+        /// </summary>
+        /// <returns></returns>
+        public static string CreatePayorigStringTest()
+        {
+         
+            KeyedCollection inputOrig = new KeyedCollection("output");
+            inputOrig.put("status", "01");  
+            inputOrig.put("date", "20140509085502");
+            inputOrig.put("charge", "10");
+            inputOrig.put("masterId", "2000311146");  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            inputOrig.put("orderId", "20003111462014050925995114");  //订单号，严格遵守格式：商户号+8位日期YYYYMMDD+8位流水
+
+            inputOrig.put("currency", "RMB");  //币种，目前只支持RMB
+                                               //   inputOrig.put("amount", count * price);  //订单金额，12整数，2小数
+            inputOrig.put("amount", ".01");  //订单金额，12整数，2小数
+
+            inputOrig.put("paydate", "20140509085530");  //下单时间，YYYYMMDDHHMMSS	
+            inputOrig.put("remark", "");  //备注字段（商户自定）
+            inputOrig.put("objectName", "KHpaygate");  //订单款项描述（商户自定）
+            inputOrig.put("validtime", "0");  //订单有效期(秒)，0不生效	
+     
+
+            return inputOrig.toString().replace("\n", "").replace("\t", "");
+        }
+
+
+        /// <summary>  
+        /// DateTime时间格式转换为Unix时间戳格式  
+        /// </summary>  
+        /// <param name="time"> DateTime时间格式</param>  
+        /// <returns>Unix时间戳格式</returns>  
+        public static int ConvertDateTimeInt(System.DateTime time)
+        {
+            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+            return (int)(time - startTime).TotalSeconds;
+        }
+
+        public static string GenUniqueString()
+        {
+            string KeleyiStr = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            char[] rtn = new char[8];
+            Guid gid = Guid.NewGuid();
+            var ba = gid.ToByteArray();
+            for (var i = 0; i < 8; i++)
+            {
+                rtn[i] = KeleyiStr[((ba[i] + ba[8 + i]) % 35)];
+            }
+            return "" + rtn[0] + rtn[1] + rtn[2] + rtn[3] + rtn[4] + rtn[5] + rtn[6] + rtn[7];
+        }
+
+        private static int getRandomCount()
+        {
+            Random Rdm = new Random();
+
+            //产生1到100的随机数
+            int iRdm = Rdm.Next(1, 100);
+            return iRdm;
+        }
+
+
+        //生成8位随机数
+        private static String getOrderId()
+        {
+            String orderId;
+            java.util.Random r = new java.util.Random();
+            while (true)
+            {
+                int i = r.nextInt(99999999);
+                if (i < 0) i = -i;
+                //  orderId = String.valueOf(i);
+                orderId = i.ToString();
+                //    System.out.println("---生成随机数---" + orderId);
+                if (orderId.length() < 8)
+                {
+                    //      System.out.println("---位数不够8位---" + orderId);
+                    continue;
+                }
+                if (orderId.length() >= 8)
+                {
+                    orderId = orderId.substring(0, 8);
+                    //       System.out.println("---生成8位流水---" + orderId);
+                    break;
+                }
+            }
+            return orderId;
+        }
+
+
+
+        #region 处理请求数据
+
+
+
+
 
         /// <summary>
         /// 创建提交的数据
@@ -74,68 +170,28 @@ namespace sdbBank
             return sbHtml.ToString();
         }
 
+        #endregion
 
+     
 
-        /// <summary>  
-        /// DateTime时间格式转换为Unix时间戳格式  
-        /// </summary>  
-        /// <param name="time"> DateTime时间格式</param>  
-        /// <returns>Unix时间戳格式</returns>  
-        public static int ConvertDateTimeInt(System.DateTime time)
-        {
-            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
-            return (int)(time - startTime).TotalSeconds;
+        #region 回调后的数据处理
+
+ public static KeyedCollection parseOrigData(String origData)
+     {
+       KeyedCollection output = new KeyedCollection();
+      try {
+        output = (KeyedCollection)DataElementSerializer.serializeFrom(origData);
         }
-
-        public static string GenUniqueString()
-        {
-            string KeleyiStr = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            char[] rtn = new char[8];
-            Guid gid = Guid.NewGuid();
-            var ba = gid.ToByteArray();
-            for (var i = 0; i < 8; i++)
-            {
-                rtn[i] = KeleyiStr[((ba[i] + ba[8 + i]) % 35)];
-            }
-            return "" + rtn[0] + rtn[1] + rtn[2] + rtn[3] + rtn[4] + rtn[5] + rtn[6] + rtn[7];
-        }
-
-        private static int getRandomCount()
-        {
-            Random Rdm = new Random();
-
-            //产生1到100的随机数
-            int iRdm = Rdm.Next(1, 100);
-            return iRdm;
-        }
+       catch (Exception e1) {
+         throw new Exception("源数据解析异常！"+ e1);
+       }
+        return output;
+       }
 
 
-        //生成8位随机数
-        private static String getOrderId()
-        {
-            String orderId;
-            java.util.Random r = new java.util.Random();
-            while (true)
-            {
-                int i = r.nextInt(99999999);
-                if (i < 0) i = -i;
-                //  orderId = String.valueOf(i);
-                orderId = i.ToString();
-                //    System.out.println("---生成随机数---" + orderId);
-                if (orderId.length() < 8)
-                {
-                    //      System.out.println("---位数不够8位---" + orderId);
-                    continue;
-                }
-                if (orderId.length() >= 8)
-                {
-                    orderId = orderId.substring(0, 8);
-                    //       System.out.println("---生成8位流水---" + orderId);
-                    break;
-                }
-            }
-            return orderId;
-        }
+       #endregion
+
+
 
     }
 }
