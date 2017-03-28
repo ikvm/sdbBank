@@ -43,6 +43,9 @@
     <Reference Include="emp">
       <HintPath>..\lib\emp.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="IKVM.OpenJDK.Beans">
       <HintPath>..\lib\IKVM.OpenJDK.Beans.dll</HintPath>
     </Reference>
