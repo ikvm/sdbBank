@@ -1,2 +1,1 @@
-# sdbBank
-平安银行支付接口demo(.net版本)
+平安银行支付demo   .net版本 参考
