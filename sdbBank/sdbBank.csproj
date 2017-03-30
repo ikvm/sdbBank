@@ -77,6 +77,7 @@
     <Compile Include="Base64.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="RSA.cs" />
+    <Compile Include="SafeUtil.cs" />
     <Compile Include="SDKConfig.cs" />
     <Compile Include="MD5WithRSA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

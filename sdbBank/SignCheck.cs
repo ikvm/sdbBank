@@ -47,10 +47,7 @@ namespace sdbBank
 
         public static bool verifyData(string strToSign, string strSign)
         {
-   
-
-
-            //  X509Certificate2 objx5092;
+     //  X509Certificate2 objx5092;
             //  string password = "changeit";
             //  if (string.IsNullOrWhiteSpace(password))
             //  {
@@ -61,10 +58,11 @@ namespace sdbBank
             //      objx5092 = new X509Certificate2(SDKConfig.SignPFXPath, "changeit");
             //  }
             //string publicKey = objx5092.GetPublicKeyString();
-            string publicKey = RSAPublicKeyJava2DotNet(SDKConfig.sdbPublicKey);
-            var cc = RSAHelper.VerifyData(publicKey, strToSign, strSign);
+         //   string publicKey = RSAPublicKeyJava2DotNet(SDKConfig.sdbPublicKey);
+        //    var cc = RSAHelper.VerifyData(publicKey, strToSign, strSign);
 
         var tt=    RSAFromPkcs8.verify(strToSign, strSign, SDKConfig.sdbPublicKey, "utf-8");  //GBK    utf-8
+            var tt1 = RSAFromPkcs8.verify(strToSign, strSign, SDKConfig.sdbPublicKey, "GBK");
             return isValidSignature(strToSign, strSign, SDKConfig.sdbPublicKey);
         }
       

@@ -16,16 +16,22 @@ namespace Pingan.Controllers
     {
         public ActionResult testHello()
         {
+            String encoding = "GBK";
             String orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0ic3RhdHVzIiB2YWx1%0AZT0iMDEiLz48ZmllbGQgaWQ9ImRhdGUiIHZhbHVlPSIyMDE0MDUwOTA4NTUwMiIvPjxmaWVsZCBp%0AZD0iY2hhcmdlIiB2YWx1ZT0iMTAiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDMx%0AMTE0NiIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDAzMTExNDYyMDE0MDUwOTI1OTk1%0AMTE0Ii8%2BPGZpZWxkIGlkPSJjdXJyZW5jeSIgdmFsdWU9IlJNQiIvPjxmaWVsZCBpZD0iYW1vdW50%0AIiB2YWx1ZT0iLjAxIi8%2BPGZpZWxkIGlkPSJwYXlkYXRlIiB2YWx1ZT0iMjAxNDA1MDkwODU1MzAi%0ALz48ZmllbGQgaWQ9InJlbWFyayIgdmFsdWU9IiIvPjxmaWVsZCBpZD0ib2JqZWN0TmFtZSIgdmFs%0AdWU9IktIcGF5Z2F0ZSIvPjxmaWVsZCBpZD0idmFsaWR0aW1lIiB2YWx1ZT0iMCIvPjwva0NvbGw%2B%0A";
             //模拟银行返回通知原始数据，实际页面接收程序应为：
             //String sign = request.getParameter("sign");
             String sign = "MjY5YzJlMDBhMzcyZTJkNWJjYjAxMzhmNGMxNmRkNDVjNjVjYTY3YzhiMjc1NTZhNTk0MTI0MzE5%0AN2Q1MWZkNWI5OTMxNzJhZTJiZDEyNDNmMjE3ZTk4MjU1N2E2YzAzOGI1YjI2YTQ0ZWU0M2EyNjUx%0AZTdmNjk2NDMzMDZhNTM5Y2NjMDM0YzJjZjJjZGE2ZjZlOTE1NTU3MzE1NzYxOGE4NGI1YTAwNTZi%0AODg4ZjVlMDdlMmNjODlmNzUyNzVmMGFmZDAzMWY4MDg3MjRjNjc0ZGE0MmRjNjYzNTM1YjM2MDFi%0ANDA4ZjllYWI4YjgxNDI4Y2E4NWM1NjMxMzA2ZA%3D%3D%0A";
             bool result = false;
+            orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
+            sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
 
-            testRSA t = new testRSA();
-            var cc = t.JavaRsaVerify(orig, sign);
-            //       result= SignCheck.JavaRsaVerify(orig, sign);
 
+            orig = Base64.DecodeBase64(orig, encoding);
+            sign = Base64.DecodeBase64(sign, encoding);
+            //    testRSA t = new testRSA();
+            //     var cc = t.JavaRsaVerify(orig, sign);
+            //  result= SignCheck.JavaRsaVerify(orig, sign);
+            result = SignCheck.verifyData(orig, sign);
 
             return Content(result.toString());
         }
