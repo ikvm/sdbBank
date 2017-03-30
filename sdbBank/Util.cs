@@ -104,12 +104,38 @@ namespace sdbBank
 
         #region 处理请求数据
 
+        /// <summary>
+        /// 创建自身业务提交的数据
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateSelfPayorigString(string MasertOrderID, decimal amount)
+        {
+            
+            String timestamp = $"{DateTime.Now:yyyyMMddHHmmss}";
+            String datetamp = timestamp.substring(0, 8);  //日期	
+
+
+            KeyedCollection inputOrig = new KeyedCollection("inputOrig");
+
+            inputOrig.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            inputOrig.put("orderId", SDKConfig.MasterID + datetamp + getOrderId());  //订单号，严格遵守格式：商户号+8位日期YYYYMMDD+8位流水
+
+            inputOrig.put("currency", "RMB");  //币种，目前只支持RMB
+            inputOrig.put("amount", String.Format("{0:F}", amount));  //订单金额，12整数，2小数
+
+            inputOrig.put("paydate", timestamp);  //下单时间，YYYYMMDDHHMMSS	
+            inputOrig.put("objectName", "KHpaygate");  //订单款项描述（商户自定）
+            inputOrig.put("validtime", "0");  //订单有效期(秒)，0不生效	
+            inputOrig.put("remark", MasertOrderID);  //备注字段（原业务系统订单号）
+
+            return inputOrig.toString().replace("\n", "").replace("\t", "");
+        }
 
 
 
 
         /// <summary>
-        /// 创建提交的数据
+        /// 创建提交的数据test
         /// </summary>
         /// <returns></returns>
         public static string CreatePayorigString()
