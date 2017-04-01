@@ -14,6 +14,24 @@ namespace Pingan.Controllers
 {
     public class HomeController : Controller
     {
+
+
+        /// <summary>
+        /// 取公钥串
+        /// </summary>
+        /// <returns></returns>
+
+        public ActionResult GetRsaPubkey()
+        {
+              var loca = "E:\\tool\\公钥.cer";
+            //        var loca = "E:\\tool\\私钥.pfx";
+            
+                   var cc = RSAFromPkcs8.GetPublicKeyCer(loca);
+         //   var cc = RSAFromPkcs8.GetPublicKey(loca, "031115");
+            return Content(cc);
+        }
+
+
         public ActionResult testHello()
         {
             String encoding = "GBK";

@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICBCQuery.cs" />
+    <Compile Include="PAHelper.cs" />
+    <Compile Include="PinganQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

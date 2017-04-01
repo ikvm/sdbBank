@@ -117,12 +117,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ICBCController.cs" />
+    <Compile Include="Controllers\sdbController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -146,6 +149,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Views\sdb\Index.cshtml" />
     <None Include="Web References\BankService\BankService.wsdl" />
     <Content Include="Web References\BankService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>

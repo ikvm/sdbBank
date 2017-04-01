@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace sdbBank
 {
@@ -18,6 +19,45 @@ namespace sdbBank
     /// </summary>
     public sealed class RSAFromPkcs8
     {
+        /// <summary>
+        /// 获取公钥
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns></returns>
+        public static string GetPublicKeyCer(string path)
+        {
+            try
+            {
+                X509Certificate2 cert = new X509Certificate2(path);
+                return cert.PublicKey.Key.ToXmlString(false);
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
+        /// <summary>
+        /// 获取公钥
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="password">文件秘钥</param>
+        /// <returns></returns>
+        public static string GetPublicKey(string path, string password)
+        {
+            try
+            {
+                X509Certificate2 cert = new X509Certificate2(path, password, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
+                return cert.PublicKey.Key.ToXmlString(false);
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
         /// <summary>
         /// 签名
         /// </summary>
