@@ -289,7 +289,7 @@ namespace Pingan.Controllers
                 orig = Base64.DecodeBase64(orig, encoding);
                 sign = Base64.DecodeBase64(sign, encoding);
 
-                 //此方法改成以上的方法
+                 //此方法改成以上的方法todo
                 result = SignCheck.verifyData(orig, sign);  
 
                 if (result)
@@ -307,6 +307,23 @@ namespace Pingan.Controllers
 
             return Content("返回测试结果:" + result);
         }
+
+        #region 对账操作
+
+
+        /// <summary>
+        /// 单笔订单状态查询
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult KH0001Result()
+        {
+            string OrderNO = "20003111462014050880763832";
+         var cc=   Util.KH0001Data(OrderNO);
+
+            return Content("返回KH0001对帐结果:"+ cc);
+        }
+
+        #endregion
 
     }
 }

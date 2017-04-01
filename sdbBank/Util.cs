@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using com.ecc.emp.data;
 using ikvm.extensions;
+using java.util;
+using Test;
+using Random = System.Random;
+using TimeZone = System.TimeZone;
 
 namespace sdbBank
 {
@@ -215,9 +219,169 @@ namespace sdbBank
        }
 
 
-       #endregion
+        #endregion
+
+        #region 对帐相关
+
+        public static Properties parseStringToProperties(String data, String token)
+        {
+            String PROPERTY_DELIMER = "=";
+            Boolean singleFlag = false;
+            if (data == null)
+            {
+                return null;
+            }
+            if ((token == null) || (token.length() == 0))
+            {
+                singleFlag = true;
+            }
+
+            StringTokenizer tokenizer = new StringTokenizer(data, token);
+            Properties props = new Properties();
+
+            if (tokenizer.countTokens() == 0)
+            {
+                throw new NoSuchElementException("");
+            }
+            do
+            {
+                String element = tokenizer.nextToken();
+
+                if (element.indexOf(PROPERTY_DELIMER) != -1)
+                    props.put(element.substring(0, element.indexOf(PROPERTY_DELIMER)),
+                            element.substring(element.indexOf(PROPERTY_DELIMER) + 1));
+            } while (tokenizer.hasMoreTokens());
+
+            return props;
+        }
 
 
+
+
+        //最终远程操作
+        public static string getDataFromPayGate2Dotnet(String businessCode, String toOrig, String toUrl,
+             KeyedCollection recv)
+        {
+            String payFlag = null;
+            String fromOrig = null;
+   String fromSign = null;
+            String encoding = "GBK";
+            String toSign = MD5WithRSA.sdbPaySign(toOrig);
+            String toSignData = Base64.EncodeBase64(toSign, encoding);
+            String toOrigData = Base64.EncodeBase64(toOrig, encoding);
+            toSignData = System.Web.HttpUtility.UrlEncode(toSignData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后原始数据,再做URL转码
+           toOrigData = System.Web.HttpUtility.UrlEncode(toOrigData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后签名数据,再做URL转码
+            string aOutputData = null;
+            aOutputData = "orig=" + toOrigData + "&sign=" + toSignData + "&businessCode=" + businessCode.getBytes(encoding);
+          var response =  PAHelper.NcPost(toUrl, aOutputData);
+            Properties res = parseStringToProperties(response, "\r\n");
+            fromSign = ((String)res.get("sign")).trim();
+            fromOrig = ((String)res.get("orig")).trim();
+            payFlag = "SDBPAYGATE=" + ((String)res.get("SDBPAYGATE")).trim();
+              fromSign = System.Web.HttpUtility.UrlDecode(fromSign, Encoding.GetEncoding("GBK"));
+            fromOrig = System.Web.HttpUtility.UrlDecode(fromOrig, Encoding.GetEncoding("GBK"));
+            fromSign = Base64.DecodeBase64(fromSign, encoding);
+            fromOrig = Base64.DecodeBase64(fromOrig, encoding);
+
+            try
+            {
+                recv.addDataField("toSign", toSign);
+                recv.addDataField("toOrig", toOrig);
+                recv.addDataField("fromSign", fromSign);
+                recv.addDataField("fromOrig", fromOrig);
+            }
+            catch (Exception e)
+            {
+              //  System.out.println("Exception:" + e);
+            }
+
+            return   fromOrig  ;
+
+        }
+
+
+        /// <summary>
+        /// 中间接口操作  
+        /// </summary>
+        /// <param name="businessCode"></param>
+        /// <param name="input"></param>
+        /// <param name="toUrl"></param>
+        /// <returns></returns>
+
+        public static KeyedCollection NETExecute(string businessCode,string input,string toUrl)
+        {
+            KeyedCollection recv = new KeyedCollection();
+            String outputString = getDataFromPayGate2Dotnet(businessCode, input , toUrl, recv);
+
+            KeyedCollection output = new KeyedCollection();
+            try
+            {
+                output = (KeyedCollection)DataElementSerializer.serializeFrom(outputString);
+                output.setName("output");
+                output.put("sendSign", recv.getDataValue("toSign"));
+                output.put("sendOrig", recv.getDataValue("toOrig"));
+                output.put("orig", recv.getDataValue("fromOrig"));
+                output.put("sign", recv.getDataValue("fromSign"));
+            }
+            catch (Exception e1)
+            {
+                throw  new Exception("返回报文解析失败！");
+            }
+            return output;
+        }
+
+
+        /// <summary>
+        /// 单笔订单状态查询
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public static string KH0001Data(string orderId)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+         com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("orderId", orderId);  //订单号，严格遵守格式：商户号+8位日期YYYYMMDD+8位流水
+
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "KH0001";
+            String toOrig     = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = "https://testebank.sdb.com.cn/corporbank/KH0001.pay";   //待改
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+             
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+                //System.out.println("---手续费金额---" + output.getDataValue("charge"));
+                //System.out.println("---商户号---" + output.getDataValue("masterId"));
+                //System.out.println("---订单号---" + output.getDataValue("orderId"));
+                //System.out.println("---币种---" + output.getDataValue("currency"));
+                //System.out.println("---订单金额---" + output.getDataValue("amount"));
+                //System.out.println("---下单时间---" + output.getDataValue("paydate"));
+                //System.out.println("---商品描述---" + output.getDataValue("objectName"));
+                //System.out.println("---订单有效期---" + output.getDataValue("validtime"));
+                //System.out.println("---备注---" + output.getDataValue("remark"));
+                //System.out.println("---本金清算标志---" + output.getDataValue("settleflg"));  //1已清算，0待清算
+                //System.out.println("---本金清算时间---" + output.getDataValue("settletime"));
+                //System.out.println("---手续费清算标志---" + output.getDataValue("chargeflg"));  //1已清算，0待清算
+                //System.out.println("---手续费清算时间---" + output.getDataValue("chargetime"));
+            }
+            else
+            {
+             //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+            //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
+        #endregion
 
     }
 }
