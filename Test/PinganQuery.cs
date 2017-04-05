@@ -27,7 +27,7 @@ namespace Test
         }
 
 
-        //3.1 系统状态探测
+        //3.1 系统状态探测,没有用封装的post提交
         public static object S001Query()
         {
             string postParams = "{0}";

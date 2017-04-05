@@ -14,7 +14,7 @@ namespace Pingan.Controllers
 {
     public class HomeController : Controller
     {
-
+        #region old,放弃
 
         /// <summary>
         /// 取公钥串
@@ -54,7 +54,7 @@ namespace Pingan.Controllers
             return Content(result.toString());
         }
 
-        #region old,放弃
+      
 
 
         public string testJava()
@@ -231,7 +231,7 @@ namespace Pingan.Controllers
                     //System.out.println("---下单时间---" + output.getDataValue("paydate"));
 
                     //System.out.println("---订单有效期---" + output.getDataValue("validtime"));
-
+                    return Content("支付完成，请等待系统验证，备注字段"+ output.getDataValue("remark"));
                 }
             }
             catch (Exception e)
@@ -240,32 +240,12 @@ namespace Pingan.Controllers
                 return Content("返回测试报错" + e.InnerException);
 
             }
-
-
-
-            return Content("返回" + orig + "^^^^^" + sign + "^^^^" + result);
+             
+  return Content("返回" + orig + "^^^^^" + sign );
         }
+  
+
         public ActionResult sdbReturnNotify()
-        {
-            var cc = Request.RawUrl;
-            String orig = this.Request["orig"];
-            String sign = this.Request["sign"];
-            MicroWeb.General.Common.LogResult("orig Notify如下" + orig);
-            MicroWeb.General.Common.LogResult("sign Notify如下" + sign);
-            return Content("返回");
-        }
-
-
-
-        // GET: Home
-        public ActionResult Index()
-        {
-
-            //  return Redirect("/home/sdbPayDemo");
-            return View();
-        }
-
-        public ActionResult sdbPayReturn()
         {
 
             String encoding = "GBK";
@@ -278,7 +258,7 @@ namespace Pingan.Controllers
             //模拟银行返回通知原始数据，实际页面接收程序应为：
       
            //   sign = "MjY5YzJlMDBhMzcyZTJkNWJjYjAxMzhmNGMxNmRkNDVjNjVjYTY3YzhiMjc1NTZhNTk0MTI0MzE5%0AN2Q1MWZkNWI5OTMxNzJhZTJiZDEyNDNmMjE3ZTk4MjU1N2E2YzAzOGI1YjI2YTQ0ZWU0M2EyNjUx%0AZTdmNjk2NDMzMDZhNTM5Y2NjMDM0YzJjZjJjZGE2ZjZlOTE1NTU3MzE1NzYxOGE4NGI1YTAwNTZi%0AODg4ZjVlMDdlMmNjODlmNzUyNzVmMGFmZDAzMWY4MDg3MjRjNjc0ZGE0MmRjNjYzNTM1YjM2MDFi%0ANDA4ZjllYWI4YjgxNDI4Y2E4NWM1NjMxMzA2ZA%3D%3D%0A";
-            bool result = false;
+           // bool result = false;
 
             try
             {
@@ -289,13 +269,16 @@ namespace Pingan.Controllers
                 orig = Base64.DecodeBase64(orig, encoding);
                 sign = Base64.DecodeBase64(sign, encoding);
 
-                 //此方法改成以上的方法todo
-                result = SignCheck.verifyData(orig, sign);  
-
-                if (result)
+                 //此方法改成以上的方法 
+              //  result = SignCheck.verifyData(orig, sign);
+                BankService.BankService ba = new BankService.BankService();
+                var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+                MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+                if (webrsaVerfyDecode)
                 {
-                    //output = Util.parseOrigData(orig);
-                 
+                    KeyedCollection output = Util.parseOrigData(orig);
+                    return Content("支付完成，请等待系统验证，备注字段" + output.getDataValue("remark"));
+                    //做具体业务操作
                 }
             }
             catch (Exception e)
@@ -305,19 +288,29 @@ namespace Pingan.Controllers
             }
 
 
-            return Content("返回测试结果:" + result);
+            return Content("返回测试" );
+        }
+
+
+
+        // GET: Home
+        public ActionResult Index()
+        {
+
+            //  return Redirect("/home/sdbPayDemo");
+            return View();
         }
 
         #region 对账操作
 
 
         /// <summary>
-        /// 单笔订单状态查询
+        /// 单笔订单状态查询  localhost:4113/home/KH0001Result?OrderNO=20003111462017040576593709
         /// </summary>
         /// <returns></returns>
-        public ActionResult KH0001Result()
+        public ActionResult KH0001Result(string OrderNO = "")
         {
-            string OrderNO = "20003111462014050880763832";
+         
          var cc=   Util.KH0001Data(OrderNO);
 
             return Content("返回KH0001对帐结果:"+ cc);

@@ -86,7 +86,7 @@ namespace Test
                 if (responseStream != null)
                 {
                     using (
-                        var responseReader = new StreamReader(responseStream, Encoding.GetEncoding("gb2312")))
+                        var responseReader = new StreamReader(responseStream, Encoding.GetEncoding("GBK")))
                     {
                         stringResponse = responseReader.ReadToEnd();
                     }

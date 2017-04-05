@@ -112,7 +112,7 @@ namespace sdbBank
         /// 创建自身业务提交的数据
         /// </summary>
         /// <returns></returns>
-        public static string CreateSelfPayorigString(string MasertOrderID, decimal amount)
+        public static string CreateSelfPayorigString(string MasterOrderID, decimal amount)
         {
             
             String timestamp = $"{DateTime.Now:yyyyMMddHHmmss}";
@@ -130,7 +130,7 @@ namespace sdbBank
             inputOrig.put("paydate", timestamp);  //下单时间，YYYYMMDDHHMMSS	
             inputOrig.put("objectName", "KHpaygate");  //订单款项描述（商户自定）
             inputOrig.put("validtime", "0");  //订单有效期(秒)，0不生效	
-            inputOrig.put("remark", MasertOrderID);  //备注字段（原业务系统订单号）
+            inputOrig.put("remark", MasterOrderID);  //备注字段（原业务系统订单号）
 
             return inputOrig.toString().replace("\n", "").replace("\t", "");
         }
@@ -347,7 +347,7 @@ namespace sdbBank
             KeyedCollection recv = new KeyedCollection();
             String businessCode = "KH0001";
             String toOrig     = input.toString().replace("\n", "").replace("\t", "");
-            String toUrl = "https://testebank.sdb.com.cn/corporbank/KH0001.pay";   //待改
+            String toUrl = SDKConfig.sdbQueryUrl+"KH0001.pay";  
 
             output = NETExecute(businessCode, toOrig, toUrl);
 

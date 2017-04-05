@@ -15,6 +15,14 @@ namespace sdbBank
         private static string sdbpublickey = config.AppSettings.Settings["sdbPublicKey"].Value;//功能：读取配置文件获取公钥
         private static string sdbkeypass = config.AppSettings.Settings["sdbKeyPass"].Value;//功能：读取配置文件获取公钥
 
+        private static string sdbqueryurl = config.AppSettings.Settings["sdbQueryUrl"].Value;//功能：读取配置文件获取查询地址
+        public static string sdbQueryUrl
+        {
+            get { return SDKConfig.sdbqueryurl; }
+            set { SDKConfig.sdbqueryurl = value; }
+        }
+
+
         public static string sdbKeyPass
         {
             get { return SDKConfig.sdbkeypass; }

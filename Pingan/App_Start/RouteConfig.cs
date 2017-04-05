@@ -16,7 +16,8 @@ namespace Pingan
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "sdb", action = "sResultNormal", id = UrlParameter.Optional }
+            //        defaults: new { controller = "sdb", action = "sResult", id = UrlParameter.Optional }
+            defaults: new { controller = "home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

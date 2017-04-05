@@ -12,9 +12,10 @@ namespace Pingan.Controllers
         // GET: sdb
         public ActionResult Index()
         {
-            string accountNo = "11002873390701";
+            string accountNo = "11002923034501";
             var oResult =  PinganQuery.Account4001Query(accountNo);
-            return View(oResult);
+            return Content(oResult.ToString());
+            //return View(oResult);
         }
 
         public ActionResult sResultNormal()
