@@ -211,8 +211,14 @@ namespace Pingan.Controllers
 
                 var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
                 MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+
+                object[] obj=new object[2];
+                obj[0] = orig;
+                obj[1] = sign;
+              var wsdl=  Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
+        
                 //  result = SignCheck.verifyData(orig, sign);
-                if (webrsaVerfyDecode)
+                if (Convert.ToBoolean(wsdl.toString()))
                 //    if (result)
                 {
                     KeyedCollection output = Util.parseOrigData(orig);
@@ -305,7 +311,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 单笔订单状态查询  localhost:4113/home/KH0001Result?OrderNO=20003111462017040576593709
+        /// 单笔订单状态查询  localhost:4113/home/KH0001Result?OrderNO=20003111462017040573393892
         /// </summary>
         /// <returns></returns>
         public ActionResult KH0001Result(string OrderNO = "")

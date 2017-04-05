@@ -383,5 +383,72 @@ namespace sdbBank
 
         #endregion
 
+        #region wsdl
+        /// <summary>
+        /// webservice固定调用方法
+        /// </summary>
+        /// <returns></returns>
+        public static object CallWebServiceObj(string name, object[] obj)
+        {
+            try
+            {
+           //     string url = "http://localhost:8080/axis2/services/BankService?wsdl";//wsdl地址  
+                string url = SDKConfig.sdbLocalVerifyUrl;
+                WebServiceProxy wsd = new WebServiceProxy(url, name);
+                object suc =  wsd.ExecuteQuery(name, obj);
+              
+                //记录结果
+
+                return suc;
+            }
+            catch (Exception e)
+            {
+                return "wsdlFail";
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// webservice固定调用方法
+        /// </summary>
+        /// <returns></returns>
+        private static string CallWebService(string name, object[] obj)
+        {
+            try
+            {
+                string url = "http://localhost:8080/axis2/services/BankService?wsdl";//wsdl地址  
+                WebServiceProxy wsd = new WebServiceProxy(url, name);
+                string suc = (string)wsd.ExecuteQuery(name, obj);
+                if (obj.Length == 1)
+                {
+                    if (obj[0] != null)
+                    {
+                        //记录？
+                    }
+
+                }
+                if (obj.Length == 2)
+                {
+                    if (obj[1] != null)
+                    {   //记录？
+                    }
+                }
+
+                //记录结果
+
+                return suc;
+            }
+            catch (Exception e)
+            {
+                return "wsdlFail";
+            }
+
+        }
+
+        #endregion
+
+
     }
 }
