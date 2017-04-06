@@ -163,8 +163,8 @@ namespace Pingan.Controllers
             {
                 //string  origData = getInputOrig().toString().replace("\n", "").replace("\t", "");
                 // sign = MD5WithRSA.sdbPaySign(origData);   //签名
-                orig = Util.CreatePayorigString();  //获取原始数据
-                //     orig=    Util.CreatePayorigStringTest();
+                 //  orig = Util.CreatePayorigString();  //获取原始数据
+                  orig=    Util.CreateSelfPayorigString("201704061235",Convert .ToDecimal(5.26));
                 sign = MD5WithRSA.sdbPaySign(orig);
 
                 orig = Base64.EncodeBase64(orig, encoding);  //原始数据先做Base64Encode转码
@@ -196,9 +196,9 @@ namespace Pingan.Controllers
             String encoding = "GBK";
             bool result = false;
             //添加 远程验证服务 http://localhost:8080/axis2/services/BankService?wsdl
-            BankService.BankService ba = new BankService.BankService();
-            var webrsaVerfy = ba.JavaRsaVerify(orig, sign);
-            MicroWeb.General.Common.LogResult("JavaRsaVerify如下" + webrsaVerfy);
+         //   BankService.BankService ba = new BankService.BankService();
+         //   var webrsaVerfy = ba.JavaRsaVerify(orig, sign);
+        //    MicroWeb.General.Common.LogResult("JavaRsaVerify如下" + webrsaVerfy);
             try
             {
                 orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
@@ -209,14 +209,19 @@ namespace Pingan.Controllers
                 sign = Base64.DecodeBase64(sign, encoding);
 
 
-                var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
-                MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+           //     var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+          //      MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
 
                 object[] obj=new object[2];
                 obj[0] = orig;
                 obj[1] = sign;
               var wsdl=  Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
-        
+                MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
+                if (wsdl.toString() == "wsdlFail")
+                {
+                    return Content("验签出错");
+                }
+
                 //  result = SignCheck.verifyData(orig, sign);
                 if (Convert.ToBoolean(wsdl.toString()))
                 //    if (result)
