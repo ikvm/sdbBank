@@ -163,8 +163,8 @@ namespace Pingan.Controllers
             {
                 //string  origData = getInputOrig().toString().replace("\n", "").replace("\t", "");
                 // sign = MD5WithRSA.sdbPaySign(origData);   //签名
-                 //  orig = Util.CreatePayorigString();  //获取原始数据
-                  orig=    Util.CreateSelfPayorigString("201704061235",Convert .ToDecimal(5.26));
+              orig = Util.CreatePayorigString();  //获取原始数据
+                //  orig=    Util.CreateSelfPayorigString("dsd12121", Convert .ToDecimal(0.01));
                 sign = MD5WithRSA.sdbPaySign(orig);
 
                 orig = Base64.EncodeBase64(orig, encoding);  //原始数据先做Base64Encode转码
@@ -325,6 +325,21 @@ namespace Pingan.Controllers
          var cc=   Util.KH0001Data(OrderNO);
 
             return Content("返回KH0001对帐结果:"+ cc);
+        }
+
+        /// <summary>
+        /// 订单列表信息查询(查询的时间范围间隔不能超过31天) localhost:4113/home/KH0002Result
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+
+        public ActionResult KH0002Result(string beginDate = "20170311000000", string endDate= "20170410240000")
+        {
+
+            var cc = Util.KH0002Data(beginDate, endDate);
+
+            return Content("返回KH0002对帐结果:" + cc);
         }
 
         #endregion

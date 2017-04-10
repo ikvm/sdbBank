@@ -381,6 +381,57 @@ namespace sdbBank
             return output.toString();
         }
 
+
+
+        /// <summary>
+        /// 订单列表信息查询
+        /// </summary> 
+        /// <returns></returns>
+        public static string KH0002Data(string beginDate  , string endDate  )
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("beginDate", beginDate);  //查询开始时间（支付完成时间）YYYYMMDDHHMMSS
+            input.put("endDate", endDate);//查询结束时间（支付完成时间）YYYYMMDDHHMMSS
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "KH0002";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbQueryUrl + "KH0002.pay";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+                //System.out.println("---手续费金额---" + output.getDataValue("charge"));
+                //System.out.println("---商户号---" + output.getDataValue("masterId"));
+                //System.out.println("---订单号---" + output.getDataValue("orderId"));
+                //System.out.println("---币种---" + output.getDataValue("currency"));
+                //System.out.println("---订单金额---" + output.getDataValue("amount"));
+                //System.out.println("---下单时间---" + output.getDataValue("paydate"));
+                //System.out.println("---商品描述---" + output.getDataValue("objectName"));
+                //System.out.println("---订单有效期---" + output.getDataValue("validtime"));
+                //System.out.println("---备注---" + output.getDataValue("remark"));
+                //System.out.println("---本金清算标志---" + output.getDataValue("settleflg"));  //1已清算，0待清算
+                //System.out.println("---本金清算时间---" + output.getDataValue("settletime"));
+                //System.out.println("---手续费清算标志---" + output.getDataValue("chargeflg"));  //1已清算，0待清算
+                //System.out.println("---手续费清算时间---" + output.getDataValue("chargetime"));
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
         #endregion
 
         #region wsdl
