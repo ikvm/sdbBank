@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace sdbBank
 {
     public class PAConfigHelper
     {
@@ -46,6 +46,7 @@ namespace Test
             httpRequest.ContentType = "application/x-www-form-urlencoded";
             httpRequest.Method = "POST";
             httpRequest.Timeout = timeOut * 1000;
+            httpRequest.ContentLength = bytesToPost.Length;
             if (sign)
             {
                 httpRequest.ContentLength = bytesToPost.Length;
@@ -95,9 +96,9 @@ namespace Test
 
                 #endregion
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ;
+                return e.Message;
             }
             return stringResponse;
         }

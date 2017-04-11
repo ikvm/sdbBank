@@ -78,6 +78,9 @@
   <ItemGroup>
     <Compile Include="Base64.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="ICBCQuery.cs" />
+    <Compile Include="PAHelper.cs" />
+    <Compile Include="PinganQuery.cs" />
     <Compile Include="RSA.cs" />
     <Compile Include="SafeUtil.cs" />
     <Compile Include="SDKConfig.cs" />
@@ -88,12 +91,7 @@
     <Compile Include="WebServiceProxy.cs">
       <SubType>Component</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Test\Test.csproj">
-      <Project>{0A76C6B2-C251-46DC-87FC-43BBAEAED76D}</Project>
-      <Name>Test</Name>
-    </ProjectReference>
+    <Compile Include="YQHelp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

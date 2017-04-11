@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Test;
+using sdbBank;
+
 namespace Pingan.Controllers
 {
     public class ICBCController : Controller
@@ -24,16 +25,16 @@ namespace Pingan.Controllers
         {
             //调用方法实例
             //源 http://blog.csdn.net/xie3400656/article/details/7011106
-            var oResult = Test.ICBCQuery.B2BQuery("10087", "20111124", "2307EC.........", "2307.........");
+            var oResult =  ICBCQuery.B2BQuery("10087", "20111124", "2307EC.........", "2307.........");
             string strResultMsg = string.Empty;
             //正常返回查询结果
-            if (oResult.GetType() == typeof(Test.ICBCQuery))
+            if (oResult.GetType() == typeof( ICBCQuery))
             {
-                var bInfo = ((Test.ICBCQuery)oResult);
-                strResultMsg = Enum.GetName(typeof(Test.ICBCQuery.CommandState), Convert.ToInt32(bInfo.tranStat)).ToString();
+                var bInfo = (( ICBCQuery)oResult);
+                strResultMsg = Enum.GetName(typeof( ICBCQuery.CommandState), Convert.ToInt32(bInfo.tranStat)).ToString();
             }
             else
-                strResultMsg = Enum.GetName(typeof(Test.ICBCQuery.ErrorCode), Convert.ToInt32(oResult));
+                strResultMsg = Enum.GetName(typeof( ICBCQuery.ErrorCode), Convert.ToInt32(oResult));
 
 
             return View();

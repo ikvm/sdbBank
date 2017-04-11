@@ -8,19 +8,29 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace Test
+namespace sdbBank
 {
   public  class PinganQuery
   {
       private static string apiUrl = PAConfigHelper.GetConfiguration("PALocalApiUrl");
+        private static string  YQCode = PAConfigHelper.GetConfiguration("sdbYQCode");
 
+        private static string sendStr="A001010101001010799000099990000000000053S001  123450120170411102040YQTEST20170411102040                                                                                                          000001            00000000000<?xml version=\"1.0\" encoding=\"GBK\"?><Result></Result>";
+
+ 
+      private static string sendStrBalance = "A0010101010010107990000999900000000001084001  123450120170411105802YQTEST20170411105802                                                                                                          000001            00000000000<?xml version=\"1.0\" encoding=\"GBK\"?><Result><Account>0122100613675</Account> <CcyCode>RMB</CcyCode></Result>";
+
+
+      private static string S001XML = "<?xml version=\"1.0\" encoding=\"GBK\"?><Result></Result>";
 
         public static string S001NormalQuery()
         {
             string postParams = "{0}";
             StringBuilder sb = new StringBuilder();
-            sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?><Result></Result>");
-
+         
+       // sb.Append(sendStrBalance);
+            var str = YQHelp.asemblyYQPackets(YQCode, "S001", S001XML);
+            sb.Append(str);
             string postData = string.Format(postParams, sb.ToString());
           var cc=  PAHelper.NcPost(apiUrl, postData);
             return cc;

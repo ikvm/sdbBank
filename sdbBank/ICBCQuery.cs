@@ -10,11 +10,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace Test
-{
-
-
-
+namespace sdbBank
+{ 
 
     public class ICBCQuery
     {
