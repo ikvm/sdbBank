@@ -15,12 +15,15 @@ namespace Pingan.Controllers
         /// </summary>
         /// <param name="accountNo"></param>
         /// <returns></returns>
-        public ActionResult Index( string accountNo = "11002923034501" )
+        public ActionResult Index( string accountNo = "11014803543008")
         {
         
             var oResult =  PinganQuery.YQ4001NormalQuery(accountNo);
-            return Content(oResult );
-            //return View(oResult);
+            //解释返回码与返回描述
+            var a = PAHelper.getReturnXmlInfo(oResult);
+            var b = PAHelper.getAccBalance(oResult);
+            return Content(a +b  );
+           
         }
 
 
@@ -41,8 +44,12 @@ namespace Pingan.Controllers
         /// <returns></returns>
         public ActionResult KHKF03(string InAcctNo= "6221558812340000", string InAcctName= "互联网", string TranAmount="5.59")
         {
-            var oResult = PinganQuery.KHKF03(  InAcctNo,   InAcctName,   TranAmount);
-            return Content(oResult);
+            var OrderNumber =  "ZXLKF0320170417TV003";   //20位客户的订单号
+            var oResult = PinganQuery.KHKF03(  InAcctNo,   InAcctName,   TranAmount, OrderNumber);
+
+            var cc= PAHelper.getKHKF03Result(oResult);
+
+            return Content(cc);
         }
 
 
@@ -51,11 +58,14 @@ namespace Pingan.Controllers
         /// 跨行快付查询  3.4 单笔付款结果查询  http://localhost:4113/sdb/KHKF04
         /// </summary>
         /// <returns></returns>
-        public ActionResult KHKF04(string OrderNumber = "ZXLKF0320170411TV001")
+        public ActionResult KHKF04(string OrderNumber = "ZXLKF0320170417TV001")
         {
             //传订单号
             var oResult = PinganQuery.KHKF04(OrderNumber);
-            return Content(oResult);
+
+            var cc = PAHelper.getKHKF04Result(oResult);
+
+            return Content(cc);
         }
 
 

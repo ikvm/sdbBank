@@ -67,20 +67,18 @@ namespace sdbBank
 
         /// <summary>
         /// 跨行快付  单笔
-        /// </summary>
-        /// <param name="InAcctNo"></param>
-        /// <param name="InAcctName"></param>
-        /// <param name="TranAmount"></param>
+        /// </summary> 
         /// <returns></returns>
 
-      public static string KHKF03(string InAcctNo, string InAcctName,string TranAmount)
+      public static string KHKF03(string InAcctNo, string InAcctName,string TranAmount,string OrderNumber)
         {
       string sdbYQAcctNo = PAConfigHelper.GetConfiguration("sdbYQAcctNo");
             string sdbYQCorpId = PAConfigHelper.GetConfiguration("sdbYQCorpId");
             string postParams = "{0}";
             StringBuilder sb = new StringBuilder();
             sb.Append("<?xml version=\"1.0\" encoding=\"GBK\" ?><Result><OrderNumber>");
-            sb.Append("ZXLKF0320170411TV001");   //20位订单号
+
+            sb.Append(OrderNumber);
             sb.Append("</OrderNumber>");
             sb.Append("<AcctNo>");
             sb.Append(sdbYQAcctNo);   //企业签约帐号
@@ -100,11 +98,7 @@ namespace sdbBank
             sb.Append("<TranAmount>");
             sb.Append(TranAmount);
             sb.Append("</TranAmount>");
-
-            sb.Append("<TranAmount>");
-            sb.Append(TranAmount);
-            sb.Append("</TranAmount>");
-
+ 
             sb.Append("<InAcctNo>");
             sb.Append(InAcctNo);
             sb.Append("</InAcctNo>");
@@ -160,7 +154,7 @@ namespace sdbBank
       #region 早期测试
 
 
-            //3.1 系统状态探测,没有用封装的post提交_无效
+            //3.1 系统状态探测 _无效
         public static object S001Query()
         {
             string postParams = "{0}";
@@ -169,36 +163,8 @@ namespace sdbBank
          
             string postData = string.Format(postParams, sb.ToString());
 
-            //配置请求参数
-            HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create(apiUrl);
-            wReq.ContentType = "application/x-www-form-urlencoded";
-            wReq.Method = "POST";
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            byte[] data = encoding.GetBytes(postData);
-            wReq.ContentLength = data.Length;
-            Stream reqStream = wReq.GetRequestStream();
-            reqStream.Write(data, 0, data.Length);
-            reqStream.Close();
-            //获取结果
-            WebResponse wResp = wReq.GetResponse();
-            Stream respStream = wResp.GetResponseStream();
-            string stringResp = string.Empty;
-            if (respStream != null)
-            {
-                using (StreamReader respReader = new StreamReader(respStream, Encoding.GetEncoding("GBK")))
-                {
-                    stringResp = HttpContext.Current.Server.UrlDecode(respReader.ReadToEnd());
-                }
-                respStream.Close();
-            }
-            if (stringResp.IndexOf("Result") > -1)
-            {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(stringResp);
-                var pubXml = xmlDoc.SelectSingleNode("Result");
-                var Result = pubXml.SelectSingleNode("Result").InnerText;
-            }
-            return stringResp;
+            var cc = PAHelper.NcPost(apiUrl, postData);
+            return cc;
         }
 
 
