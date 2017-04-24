@@ -102,6 +102,59 @@ namespace sdbBank
         }
 
 
+        /// <summary>
+        /// 当日明细__查询返回解释
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string get4008Result(string source)
+        {
+            try
+            {
+                if (source.Length > 222)
+                {
+                    int p = source.IndexOf("<?", StringComparison.Ordinal);
+                    var xmlstr = source.Substring(p);
+
+                    YQ4008Model list = XmlDeserialize<YQ4008Model>(xmlstr);
+                    return list.PageRecCount;
+                }
+                return source;
+            }
+            catch (Exception e)
+            {
+                return "当日明细返回解释失败" + e;
+            }
+        }
+
+
+        /// <summary>
+        /// 取历史明细
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string get4013Result(string source)
+        {
+            try
+            {
+                if (source.Length > 222)
+                {
+                    int p = source.IndexOf("<?", StringComparison.Ordinal);
+                    var xmlstr = source.Substring(p);
+
+                    YQ4013Model list = XmlDeserialize<YQ4013Model>(xmlstr);
+                    return list.ToString();
+                }
+                return source;
+            }
+            catch (Exception e)
+            {
+                return "历史明细返回解释失败" + e;
+            }
+        }
+
+
+
 
         /// <summary>
         /// 跨行快付提交返回_ 银行业务流水号

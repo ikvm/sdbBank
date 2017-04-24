@@ -55,7 +55,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 跨行快付查询  3.4 单笔付款结果查询  http://localhost:4113/sdb/KHKF04
+        /// 跨行快付结果查询查询   http://localhost:4113/sdb/KHKF04
         /// </summary>
         /// <returns></returns>
         public ActionResult KHKF04(string OrderNumber = "ZXLKF0320170417TV001")
@@ -68,6 +68,39 @@ namespace Pingan.Controllers
             return Content(cc);
         }
 
+
+
+        /// <summary>
+        /// 当日明细
+        /// </summary>
+        /// <param name="accountNo"></param>
+        /// <returns></returns>
+
+        public ActionResult todayDetail4008(string accountNo = "11014803543008")
+        {
+
+            var oResult = PinganQuery.YQ4008todayDetailQuery(accountNo);
+             
+            var cc = PAHelper.get4008Result(oResult);
+            return Content(cc);
+
+        }
+
+
+        /// <summary>
+        /// 历史明细
+        /// </summary> 
+        /// <returns></returns>
+
+        public ActionResult HisDetail4013(string accountNo = "11014803543008",string BeginDate="20170401",string EndDate="20170430")
+        {
+
+            var oResult = PinganQuery.YQ4013HisDetailQuery(accountNo, BeginDate, EndDate);
+
+            var cc = PAHelper.get4013Result(oResult);
+            return Content(cc);
+
+        }
 
 
 

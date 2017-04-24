@@ -87,83 +87,86 @@ namespace sdbBank
         public string JournalNo { get; set; }
         public string LogCount { get; set; }
 
-        public listInfos listInfos;
-
-
-    }
-
-
-
-    public class listInfos
-    {
         [XmlElement("list")]
         public List<listInfo> listInfoList;
+
     }
+ 
 
 
     public class listInfo
     {
-        [XmlAttribute]
+        [XmlElement]
         public string TranTime1 { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string HostSeqNo { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string DetailSerialNo { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string BussSeqNo { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public string SummonNo { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string SendBank { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string SendBankNode { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string SendAccount { get; set; }
 
 
 
-        [XmlAttribute]
+        [XmlElement]
         public string SendName { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string TxAmount { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string AcctBank { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string AcctBankNode { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public string AcctAccount { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string AcctName { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string TxType { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string AbstractStr { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public string Notes { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string Fee1 { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string Fee2 { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string AbstractStr_Desc { get; set; }
 
 
-        [XmlAttribute]
+        [XmlElement]
         public string CVoucherNo { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string CstInnerFlowNo { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string TranChannel { get; set; }
-        [XmlAttribute]
+        [XmlElement]
         public string TranCode { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public string HostDate { get; set; }
     }
 
-  
+
+
+
+    /// <summary>
+    ///历史明细查询结果集返回
+    /// </summary>
+    [XmlRoot("Result")]
+    public class YQ4013Model
+    {
+        
+    }
 
 }

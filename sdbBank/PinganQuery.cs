@@ -65,12 +65,68 @@ namespace sdbBank
         }
 
 
+      /// <summary>
+      /// 历史明细
+      /// </summary> 
+      /// <returns></returns>
+        public static string YQ4013HisDetailQuery(string accountNo  , string BeginDate  , string EndDate )
+      {
+
+          string postParams = "{0}";
+          StringBuilder sb = new StringBuilder();
+          sb.Append("<?xml version=\"1.0\" encoding=\"GBK\" ?><Result><AcctNo>");
+          sb.Append(accountNo);
+          sb.Append("</AcctNo><CcyCode>");
+          sb.Append("RMB");
+          sb.Append("</CcyCode>");
+          sb.Append("<BeginDate>"+ BeginDate + "</BeginDate>");
+          sb.Append("<EndDate>" + EndDate + "</EndDate>");
+            sb.Append("<PageNo>0</PageNo>");
+          sb.Append("<PageSize>30</PageSize>");
+          sb.Append("<OrderMode>002</OrderMode></Result>");
+            string YQ4013XML = string.Format(postParams, sb.ToString());
+
+          var str = YQHelp.asemblyYQPackets(YQCode, "4013", YQ4013XML);
+
+          var cc = PAHelper.NcPost(apiUrl, str);
+          return cc;
+      }
+
+
+      /// <summary>
+      /// 当日明细
+      /// </summary>
+      /// <param name="accountNo"></param>
+      /// <returns></returns>
+      public static string YQ4008todayDetailQuery(string accountNo)
+      {
+
+          string postParams = "{0}";
+          StringBuilder sb = new StringBuilder();
+          sb.Append("<?xml version=\"1.0\" encoding=\"GBK\" ?><Result><AcctNo>");
+          sb.Append(accountNo);
+          sb.Append("</AcctNo><CcyCode>");
+          sb.Append("RMB");
+          sb.Append("</CcyCode>");
+          sb.Append("<PageNo>0</PageNo>");
+          sb.Append("<PageSize></PageSize></Result>");
+          string YQ4008XML = string.Format(postParams, sb.ToString());
+
+          var str = YQHelp.asemblyYQPackets(YQCode, "4008", YQ4008XML);
+
+          var cc = PAHelper.NcPost(apiUrl, str);
+          return cc;
+      }
+
+
+
+
         /// <summary>
         /// 跨行快付  单笔
         /// </summary> 
         /// <returns></returns>
 
-      public static string KHKF03(string InAcctNo, string InAcctName,string TranAmount,string OrderNumber)
+        public static string KHKF03(string InAcctNo, string InAcctName,string TranAmount,string OrderNumber)
         {
       string sdbYQAcctNo = PAConfigHelper.GetConfiguration("sdbYQAcctNo");
             string sdbYQCorpId = PAConfigHelper.GetConfiguration("sdbYQCorpId");
