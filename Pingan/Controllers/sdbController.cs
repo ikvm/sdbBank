@@ -92,7 +92,7 @@ namespace Pingan.Controllers
         /// </summary> 
         /// <returns></returns>
 
-        public ActionResult HisDetail4013(string accountNo = "11014803543008",string BeginDate="20170401",string EndDate="20170430")
+        public ActionResult HisDetail4013(string accountNo = "11014803543008",string BeginDate="20170424",string EndDate="20170424")
         {
 
             var oResult = PinganQuery.YQ4013HisDetailQuery(accountNo, BeginDate, EndDate);

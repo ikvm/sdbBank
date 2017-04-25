@@ -143,7 +143,7 @@ namespace sdbBank
                     var xmlstr = source.Substring(p);
 
                     YQ4013Model list = XmlDeserialize<YQ4013Model>(xmlstr);
-                    return list.ToString();
+                    return list.AcctNo;
                 }
                 return source;
             }

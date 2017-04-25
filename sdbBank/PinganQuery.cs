@@ -81,7 +81,7 @@ namespace sdbBank
           sb.Append("</CcyCode>");
           sb.Append("<BeginDate>"+ BeginDate + "</BeginDate>");
           sb.Append("<EndDate>" + EndDate + "</EndDate>");
-            sb.Append("<PageNo>0</PageNo>");
+            sb.Append("<PageNo>1</PageNo>");
           sb.Append("<PageSize>30</PageSize>");
           sb.Append("<OrderMode>002</OrderMode></Result>");
             string YQ4013XML = string.Format(postParams, sb.ToString());

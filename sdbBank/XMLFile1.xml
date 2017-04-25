@@ -1,70 +1,20 @@
-<?xml version="1.0" encoding="GBK" ?>
-<Result>
-  <AcctNo>11014803543008</AcctNo>
-<CcyCode>RMB</CcyCode>
-<PageNo>0</PageNo>
-  <PageSize>10</PageSize>
-<TranDate>20170320</TranDate>
-<EndFlag>Y</EndFlag>
-<PageRecCount>4</PageRecCount>
-<JournalNo>1</JournalNo>
-<LogCount>0</LogCount>
+<list> 
   
-<list>
-  <TranTime1>085941</TranTime1>
-<HostSeqNo>3240791703204000051202</HostSeqNo>
-<DetailSerialNo>1</DetailSerialNo>
-<BussSeqNo>8043431704215108756035</BussSeqNo>
-<SummonNo></SummonNo>
-  <SendBank>平安银行</SendBank>
-<SendBankNode>3066</SendBankNode>
-<SendAccount>11014803543008</SendAccount>
-<SendName>平安测试六零零零六零一六九五二二</SendName>
-<TxAmount>1.55</TxAmount><AcctBank></AcctBank>
-<AcctBankNode></AcctBankNode><AcctAccount>6217850800014368037</AcctAccount>
-<AcctName>个级</AcctName><TxType>D</TxType><AbstractStr>00000</AbstractStr>
-<Notes></Notes><Fee1></Fee1><Fee2></Fee2><AbstractStr_Desc>通用费项</AbstractStr_Desc>
-<CVoucherNo></CVoucherNo>
-<CstInnerFlowNo></CstInnerFlowNo>
-<TranChannel>804343</TranChannel><TranCode>G1001</TranCode>
-<HostDate>20170422</HostDate></list><list><TranTime1>085941</TranTime1>
-<HostSeqNo>3240791703201000051205</HostSeqNo><DetailSerialNo>1</DetailSerialNo>
-<BussSeqNo>8043431704215108754544</BussSeqNo><SummonNo></SummonNo>
-<SendBank>平安银行</SendBank><SendBankNode>3066</SendBankNode>
-<SendAccount>11014803543008</SendAccount><SendName>平安测试六零零零六零一六九五二二</SendName>
-<TxAmount>0.01</TxAmount><AcctBank></AcctBank><AcctBankNode></AcctBankNode>
-<AcctAccount>6226090000000048</AcctAccount>
-<AcctName>级级</AcctName><TxType>D</TxType>
-<AbstractStr>00000</AbstractStr><Notes></Notes>
-<Fee1></Fee1><Fee2></Fee2><AbstractStr_Desc>通用费项</AbstractStr_Desc>
-<CVoucherNo></CVoucherNo><CstInnerFlowNo></CstInnerFlowNo>
-<TranChannel>804343</TranChannel><TranCode>G1001</TranCode>
-<HostDate>20170422</HostDate>
-  </list>
-
-<list>
-  <TranTime1>085956</TranTime1>
-<HostSeqNo>3240791703204000051706</HostSeqNo>
-<DetailSerialNo>1</DetailSerialNo><BussSeqNo>8043431704215108755886</BussSeqNo>
-<SummonNo></SummonNo><SendBank>平安银行</SendBank><SendBankNode>3066</SendBankNode>
-<SendAccount>11014803543008</SendAccount><SendName>平安测试六零零零六零一六九五二二</SendName>
-<TxAmount>1.55</TxAmount><AcctBank></AcctBank><AcctBankNode></AcctBankNode>
-<AcctAccount>6217850800014368037</AcctAccount><AcctName>级</AcctName>
-<TxType>D</TxType><AbstractStr>00000</AbstractStr><Notes></Notes>
-<Fee1></Fee1><Fee2></Fee2><AbstractStr_Desc>通用费项</AbstractStr_Desc>
-<CVoucherNo></CVoucherNo><CstInnerFlowNo></CstInnerFlowNo>
-<TranChannel>804343</TranChannel><TranCode>G1001</TranCode>
-<HostDate>20170422</HostDate></list><list><TranTime1>085957</TranTime1>
-<HostSeqNo>3240791703203000051707</HostSeqNo><DetailSerialNo>1</DetailSerialNo>
-<BussSeqNo>8043431704215108756448</BussSeqNo><SummonNo></SummonNo>
-<SendBank>平安银行</SendBank><SendBankNode>3066</SendBankNode>
-<SendAccount>11014803543008</SendAccount><SendName>平安测试六零零零六零一六九五二二</SendName>
-<TxAmount>1.88</TxAmount><AcctBank></AcctBank><AcctBankNode></AcctBankNode>
-<AcctAccount>6217850800014368037</AcctAccount><AcctName>级我</AcctName>
-<TxType>D</TxType><AbstractStr>00000</AbstractStr><Notes></Notes>
-<Fee1></Fee1><Fee2></Fee2><AbstractStr_Desc>通用费项</AbstractStr_Desc>
-<CVoucherNo></CVoucherNo><CstInnerFlowNo></CstInnerFlowNo>
-<TranChannel>804343</TranChannel><TranCode>G1001</TranCode>
-<HostDate>20170422</HostDate>
+  <OutBankNo></OutBankNo>
+   
+  <InNode></InNode>
+  <InBankNo></InBankNo>
+  <InBankName></InBankName>
+ 
+  <VoucherNo></VoucherNo>
+  <TranFee></TranFee>
+  <PostFee></PostFee>
+  
+  <Purpose></Purpose>
+  
+  <CVoucherNo></CVoucherNo>
+  <ProxyPayAcc></ProxyPayAcc>
+  <ProxyPayName></ProxyPayName>
+  <ProxyPayBankName></ProxyPayBankName>
+ 
 </list>
-</Result>

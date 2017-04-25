@@ -166,7 +166,70 @@ namespace sdbBank
     [XmlRoot("Result")]
     public class YQ4013Model
     {
+        public string AcctNo { get; set; }
+        public string CcyCode { get; set; }
+
+        public string EndFlag { get; set; }
+
+    
+        public string Reserve { get; set; }
+        public string PageNo { get; set; }
+
+        public string PageSize { get; set; }
+     
+   
+        public string PageRecCount { get; set; }
+
+        [XmlElement("list")]
+        public List<list4013Info> list4013InfoList;
+      }
+
+    public class list4013Info
+    {
+        [XmlElement]
+        public string AcctDate { get; set; }
+
+        public string OutBankName { get; set; }
+
+        public string OutAcctName { get; set; }
+
+        public string CcyCode { get; set; }
+
+        public string OutNode { get; set; }
+
+        public string DcFlag { get; set; }
+        public string DetailSerialNo { get; set; }
+
         
+
+        public string OutAcctNo { get; set; }
+
+        public string TxTime { get; set; }
+        
+        public string HostTrace { get; set; }
+
+        public string TranAmount { get; set; }
+
+        public string InAcctName { get; set; }
+        public string InAcctNo { get; set; }
+
+
+        public string AbstractStr { get; set; }
+        public string TranChannel { get; set; }
+
+        
+        public string AbstractStr_Desc { get; set; }
+        public string AcctBalance { get; set; }
+
+        public string BussSeqNo { get; set; }
+        
+
+        [XmlElement]
+        public string TranCode { get; set; }
+
+        [XmlElement]
+        public string HostDate { get; set; }
+
     }
 
 }
