@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingan", "Pingan\Pingan.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agricultural_Bank", "Agricultural_Bank\Agricultural_Bank.csproj", "{A604D320-5D67-4366-AB23-064D0AC91B10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abcBank", "abcBank\abcBank.csproj", "{26C0FE2E-84FF-4E13-9D09-C3C5B34A2393}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A604D320-5D67-4366-AB23-064D0AC91B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A604D320-5D67-4366-AB23-064D0AC91B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A604D320-5D67-4366-AB23-064D0AC91B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26C0FE2E-84FF-4E13-9D09-C3C5B34A2393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26C0FE2E-84FF-4E13-9D09-C3C5B34A2393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26C0FE2E-84FF-4E13-9D09-C3C5B34A2393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26C0FE2E-84FF-4E13-9D09-C3C5B34A2393}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
