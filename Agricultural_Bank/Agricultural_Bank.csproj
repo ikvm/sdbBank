@@ -93,7 +93,9 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -112,6 +114,7 @@
     <Content Include="Views\ABC\ReciveServerPage.cshtml" />
     <Content Include="Views\ABC\MerchantFailure.cshtml" />
     <Content Include="Views\ABC\CustomerPage.cshtml" />
+    <Content Include="Views\ABC\MerchantQueryOrder.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

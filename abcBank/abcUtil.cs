@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+ 
 using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using com.abc.trustpay.client;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace abcBank
 {
@@ -111,5 +113,256 @@ namespace abcBank
 
        
         }
+
+
+
+        /// <summary>
+        /// 查询订单状态
+        /// </summary>
+        /// <param name="txtOrderNo"></param>
+        /// <returns></returns>
+        public static string abcQueryOrder(string txtOrderNo)
+        {
+            //1、生成商户交易查询请求对象
+            com.abc.trustpay.client.ebus.QueryOrderRequest tRequest = new com.abc.trustpay.client.ebus.QueryOrderRequest();
+            tRequest.queryRequest["PayTypeID"] = "1";    //设定交易类型（必要信息）
+            tRequest.queryRequest["OrderNo"] = txtOrderNo;  //交易编号           （必要信息）
+            tRequest.queryRequest["QueryDetail"] = "true";    //是否查询详细信息 （必要信息）
+
+            //2、传送商户交易查询请求并取得交易查询结果
+            tRequest.postJSONRequest();
+
+
+
+            //3、判断商户交易查询结果状态，进行后续操作
+            StringBuilder strMessage = new StringBuilder("");
+            string ReturnCode = JSON.GetKeyValue("ReturnCode");
+            string ErrorMessage = JSON.GetKeyValue("ErrorMessage");
+            if (ReturnCode.Equals("0000"))
+            {
+                strMessage.Append("ReturnCode   = [" + ReturnCode + "]<br/>");
+                strMessage.Append("ErrorMessage = [" + ErrorMessage + "]<br/>");
+                //4、获取结果信息
+                string orderInfo = JSON.GetKeyValue("Order");
+                if (string.IsNullOrEmpty(orderInfo))
+                {
+                    strMessage.Append("查询结果为空<br/>");
+                }
+                else
+                {
+                    byte[] order = Convert.FromBase64String(orderInfo);
+                    //1、还原经过base64编码的信息            
+                    string orderDetail = System.Text.Encoding.GetEncoding("gb2312").GetString(order);
+                    //com.abc.trustpay.client.JSON json = new com.abc.trustpay.client.JSON();
+                    //json.setJsonString(orderDetail);
+                    JSON.setJsonString(orderDetail);
+                    string queryDetail = "0";    //0：状态查询； 1：详细查询
+                    if (queryDetail.Equals("0"))
+                    {
+                        strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                        strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                        strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                        strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                        strMessage.Append("OrderAmount      = [" + JSON.GetKeyValue("OrderAmount") + "]<br/>");
+                        strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                    }
+                    else
+                    {
+                        string payTypeID = JSON.GetKeyValue("PayTypeID");
+
+                        System.Collections.Generic.Dictionary<int, Hashtable> dic = new System.Collections.Generic.Dictionary<int, Hashtable>();
+                        if (payTypeID.Equals("ImmediatePay") || payTypeID.Equals("PreAuthPay"))
+                        {
+                            strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                            strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                            strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                            strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                            strMessage.Append("OrderAmount      = [" + JSON.GetKeyValue("OrderAmount") + "]<br/>");
+                            strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                            strMessage.Append("OrderDesc      = [" + JSON.GetKeyValue("OrderDesc") + "]<br/>");
+                            strMessage.Append("OrderURL      = [" + JSON.GetKeyValue("OrderURL") + "]<br/>");
+                            strMessage.Append("PaymentLinkType      = [" + JSON.GetKeyValue("PaymentLinkType") + "]<br/>");
+                            strMessage.Append("AcctNo      = [" + JSON.GetKeyValue("AcctNo") + "]<br/>");
+                            strMessage.Append("CommodityType      = [" + JSON.GetKeyValue("CommodityType") + "]<br/>");
+                            strMessage.Append("ReceiverAddress      = [" + JSON.GetKeyValue("ReceiverAddress") + "]<br/>");
+                            strMessage.Append("BuyIP      = [" + JSON.GetKeyValue("BuyIP") + "]<br/>");
+                            strMessage.Append("iRspRef      = [" + JSON.GetKeyValue("iRspRef") + "]<br/>");
+                            strMessage.Append("ReceiveAccount      = [" + JSON.GetKeyValue("ReceiveAccount") + "]<br/>");
+                            strMessage.Append("ReceiveAccName      = [" + JSON.GetKeyValue("ReceiveAccName") + "]<br/>");
+                            strMessage.Append("MerchantRemarks      = [" + JSON.GetKeyValue("MerchantRemarks") + "]<br/>");
+                            //5、商品明细
+
+                            dic = JSON.GetArrayValue("OrderItems");
+                            if (dic.Count == 0)
+                                strMessage.Append("商品明细为空");
+                            else
+                            {
+                                strMessage.Append("商品明细为:<br/>");
+                                foreach (int key in dic.Keys)
+                                {
+                                    strMessage.Append("SubMerName      = [" + dic[key]["SubMerName"].ToString() + "],");
+                                    strMessage.Append("SubMerId      = [" + dic[key]["SubMerId"].ToString() + "],");
+                                    strMessage.Append("SubMerMCC      = [" + dic[key]["SubMerMCC"].ToString() + "],");
+                                    strMessage.Append("SubMerchantRemarks      = [" + dic[key]["SubMerchantRemarks"].ToString() + "],");
+                                    strMessage.Append("ProductID      = [" + dic[key]["ProductID"].ToString() + "],");
+                                    strMessage.Append("ProductName      = [" + dic[key]["ProductName"].ToString() + "],");
+                                    strMessage.Append("UnitPrice      = [" + dic[key]["UnitPrice"].ToString() + "],");
+                                    strMessage.Append("Qty      = [" + dic[key]["Qty"].ToString() + "],");
+                                    strMessage.Append("ProductRemarks      = [" + dic[key]["ProductRemarks"].ToString() + "],");
+                                }
+                            }
+
+                        }
+                        else if (payTypeID.Equals("DividedPay"))
+                        {
+                            strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                            strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                            strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                            strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                            strMessage.Append("OrderAmount      = [" + JSON.GetKeyValue("OrderAmount") + "]<br/>");
+                            strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                            strMessage.Append("InstallmentCode      = [" + JSON.GetKeyValue("InstallmentCode") + "]<br/>");
+                            strMessage.Append("InstallmentNum      = [" + JSON.GetKeyValue("InstallmentNum") + "]<br/>");
+                            strMessage.Append("PaymentLinkType      = [" + JSON.GetKeyValue("PaymentLinkType") + "]<br/>");
+                            strMessage.Append("AcctNo      = [" + JSON.GetKeyValue("AcctNo") + "]<br/>");
+                            strMessage.Append("CommodityType      = [" + JSON.GetKeyValue("CommodityType") + "]<br/>");
+                            strMessage.Append("ReceiverAddress      = [" + JSON.GetKeyValue("ReceiverAddress") + "]<br/>");
+                            strMessage.Append("BuyIP      = [" + JSON.GetKeyValue("BuyIP") + "]<br/>");
+                            strMessage.Append("iRspRef      = [" + JSON.GetKeyValue("iRspRef") + "]<br/>");
+                            strMessage.Append("ReceiveAccount      = [" + JSON.GetKeyValue("ReceiveAccount") + "]<br/>");
+                            strMessage.Append("ReceiveAccName      = [" + JSON.GetKeyValue("ReceiveAccName") + "]<br/>");
+                            strMessage.Append("MerchantRemarks      = [" + JSON.GetKeyValue("MerchantRemarks") + "]<br/>");
+
+                            dic = JSON.GetArrayValue("OrderItems");
+                            if (dic.Count == 0)
+                                strMessage.Append("商品明细为空");
+                            else
+                            {
+                                strMessage.Append("商品明细为:<br/>");
+                                foreach (int key in dic.Keys)
+                                {
+                                    strMessage.Append("SubMerName      = [" + dic[key]["SubMerName"].ToString() + "],");
+                                    strMessage.Append("SubMerId      = [" + dic[key]["SubMerId"].ToString() + "],");
+                                    strMessage.Append("SubMerMCC      = [" + dic[key]["SubMerMCC"].ToString() + "],");
+                                    strMessage.Append("SubMerchantRemarks      = [" + dic[key]["SubMerchantRemarks"].ToString() + "],");
+                                    strMessage.Append("ProductID      = [" + dic[key]["ProductID"].ToString() + "],");
+                                    strMessage.Append("ProductName      = [" + dic[key]["ProductName"].ToString() + "],");
+                                    strMessage.Append("UnitPrice      = [" + dic[key]["UnitPrice"].ToString() + "],");
+                                    strMessage.Append("Qty      = [" + dic[key]["Qty"].ToString() + "],");
+                                    strMessage.Append("ProductRemarks      = [" + dic[key]["ProductRemarks"].ToString() + "],");
+                                }
+                            }
+
+                            dic = JSON.GetArrayValue("Distribution");
+                            if (dic.Count == 0)
+                                strMessage.Append("分账账户信息为空");
+                            else
+                            {
+                                strMessage.Append("分账账户信息明细为:<br/>");
+                                foreach (int key in dic.Keys)
+                                {
+                                    strMessage.Append("DisAccountNo      = [" + dic[key]["DisAccountNo"].ToString() + "],");
+                                    strMessage.Append("DisAccountName      = [" + dic[key]["DisAccountName"].ToString() + "],");
+                                    strMessage.Append("DisAmount      = [" + dic[key]["DisAmount"].ToString() + "],");
+                                }
+                            }
+
+                        }
+                        else if (payTypeID.Equals("Refund"))
+                        {
+                            strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                            strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                            strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                            strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                            strMessage.Append("RefundAmount      = [" + JSON.GetKeyValue("RefundAmount") + "]<br/>");
+                            strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                            strMessage.Append("iRspRef      = [" + JSON.GetKeyValue("iRspRef") + "]<br/>");
+                            strMessage.Append("MerRefundAccountNo      = [" + JSON.GetKeyValue(" MerRefundAccountNo") + "]<br/>");
+                            strMessage.Append("MerRefundAccountName      = [" + JSON.GetKeyValue(" MerRefundAccountName") + "]<br/>");
+                        }
+                        else if (payTypeID.Equals("AgentPay"))
+                        {
+                            strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                            strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                            strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                            strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                            strMessage.Append("OrderAmount      = [" + JSON.GetKeyValue("OrderAmount") + "]<br/>");
+                            strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                            strMessage.Append("InstallmentCode      = [" + JSON.GetKeyValue("InstallmentCode") + "]<br/>");
+                            strMessage.Append("InstallmentNum      = [" + JSON.GetKeyValue("InstallmentNum") + "]<br/>");
+                            strMessage.Append("PaymentLinkType      = [" + JSON.GetKeyValue("PaymentLinkType") + "]<br/>");
+                            strMessage.Append("AcctNo      = [" + JSON.GetKeyValue("AcctNo") + "]<br/>");
+                            strMessage.Append("CommodityType      = [" + JSON.GetKeyValue("CommodityType") + "]<br/>");
+                            strMessage.Append("ReceiverAddress      = [" + JSON.GetKeyValue("ReceiverAddress") + "]<br/>");
+                            strMessage.Append("BuyIP      = [" + JSON.GetKeyValue("BuyIP") + "]<br/>");
+                            strMessage.Append("iRspRef      = [" + JSON.GetKeyValue("iRspRef") + "]<br/>");
+                            strMessage.Append("ReceiveAccount      = [" + JSON.GetKeyValue("ReceiveAccount") + "]<br/>");
+                            strMessage.Append("ReceiveAccName      = [" + JSON.GetKeyValue("ReceiveAccName") + "]<br/>");
+                            strMessage.Append("MerchantRemarks      = [" + JSON.GetKeyValue("MerchantRemarks") + "]<br/>");
+                            dic = JSON.GetArrayValue("OrderItems");
+                            if (dic.Count == 0)
+                                strMessage.Append("商品明细为空");
+                            else
+                            {
+                                strMessage.Append("商品明细为:<br/>");
+                                foreach (int key in dic.Keys)
+                                {
+                                    strMessage.Append("SubMerName      = [" + dic[key]["SubMerName"].ToString() + "],");
+                                    strMessage.Append("SubMerId      = [" + dic[key]["SubMerId"].ToString() + "],");
+                                    strMessage.Append("SubMerMCC      = [" + dic[key]["SubMerMCC"].ToString() + "],");
+                                    strMessage.Append("SubMerchantRemarks      = [" + dic[key]["SubMerchantRemarks"].ToString() + "],");
+                                    strMessage.Append("ProductID      = [" + dic[key]["ProductID"].ToString() + "],");
+                                    strMessage.Append("ProductName      = [" + dic[key]["ProductName"].ToString() + "],");
+                                    strMessage.Append("UnitPrice      = [" + dic[key]["UnitPrice"].ToString() + "],");
+                                    strMessage.Append("Qty      = [" + dic[key]["Qty"].ToString() + "],");
+                                    strMessage.Append("ProductRemarks      = [" + dic[key]["ProductRemarks"].ToString() + "],");
+                                }
+                            }
+                            dic = new System.Collections.Generic.Dictionary<int, Hashtable>();
+                            //4、获取分账账户信息
+                            dic = JSON.GetArrayValue("Distribution");
+                            if (dic.Count == 0)
+                                strMessage.Append("分账账户信息明细为空<br/>");
+                            else
+                            {
+                                strMessage.Append("分账账户信息明细为:<br/>");
+                                foreach (int key in dic.Keys)
+                                {
+                                    strMessage.Append("DisAccountNo      = [" + dic[key]["DisAccountNo"] + "],");//分账账号
+                                    strMessage.Append("DisAccountName      = [" + dic[key]["DisAccountName"] + "],");//分账账户
+                                    strMessage.Append("DisAmount      = [" + dic[key]["DisAmount"] + "]<br/>");//分账金额
+                                }
+                            }
+                        }
+                        else if (payTypeID.Equals("PreAuthed") || payTypeID.Equals("PreAuthCancel"))
+                        {
+                            strMessage.Append("PayTypeID      = [" + JSON.GetKeyValue("PayTypeID") + "]<br/>");
+                            strMessage.Append("OrderNo      = [" + JSON.GetKeyValue("OrderNo") + "]<br/>");
+                            strMessage.Append("OrderDate      = [" + JSON.GetKeyValue("OrderDate") + "]<br/>");
+                            strMessage.Append("OrderTime      = [" + JSON.GetKeyValue("OrderTime") + "]<br/>");
+                            strMessage.Append("OrderAmount      = [" + JSON.GetKeyValue("OrderAmount") + "]<br/>");
+                            strMessage.Append("Status      = [" + JSON.GetKeyValue("Status") + "]<br/>");
+                            strMessage.Append("AcctNo      = [" + JSON.GetKeyValue("AcctNo") + "]<br/>");
+                            strMessage.Append("iRspRef      = [" + JSON.GetKeyValue("iRspRef") + "]<br/>");
+                            strMessage.Append("ReceiveAccount      = [" + JSON.GetKeyValue("ReceiveAccount") + "]<br/>");
+                            strMessage.Append("ReceiveAccName      = [" + JSON.GetKeyValue("ReceiveAccName") + "]<br/>");
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //6、商户订单查询失败
+                strMessage.Append("ReturnCode   = [" + ReturnCode + "]<br/>");
+                strMessage.Append("ErrorMessage = [" + ErrorMessage + "]<br/>");
+
+            }
+            return strMessage.ToString();
+
+
+        }
+
+
     }
 }

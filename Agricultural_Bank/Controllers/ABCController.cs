@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -96,6 +97,25 @@ namespace Agricultural_Bank.Controllers
             //...
             //
             ViewBag["CustomerPageTxt"] = "已接收到通知，交易编号为：" + tOrderNo;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 商户交易查询  http://localhost:4443/abc/MerchantQueryOrder?orderno=ON200412230001
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+
+        public ActionResult MerchantQueryOrder(string OrderNo)
+        {
+
+            var cc = abcUtil.abcQueryOrder(OrderNo);
+
+
+            ViewData["strMessage"] = cc;
+
 
             return View();
         }
