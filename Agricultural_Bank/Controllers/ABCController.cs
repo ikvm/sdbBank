@@ -25,7 +25,10 @@ namespace Agricultural_Bank.Controllers
         /// <returns></returns>
         public ActionResult abcPayDemo()
         {
-            var  cc= abcUtil.abcMerChantPayment();
+            string orderNo = "ON201705110001";
+            string OrderAmount = "0.01";
+
+            var  cc= abcUtil.abcMerChantPayment(orderNo, OrderAmount);
             if (cc .Contains("/"))
             {
                 return  Redirect(cc);

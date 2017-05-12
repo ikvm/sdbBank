@@ -28,16 +28,16 @@ namespace abcBank
         /// 农行方式1支付
         /// </summary>
         /// <returns></returns>
-        public static string abcMerChantPayment()
+        public static string abcMerChantPayment(string OrderNo,string OrderAmount)
         {
 
             //1、生成定单订单对象，并将订单明细加入订单中
             com.abc.trustpay.client.ebus.PaymentRequest tPaymentRequest = new com.abc.trustpay.client.ebus.PaymentRequest();
             //2、设定订单属性
             tPaymentRequest.dicOrder["PayTypeID"] = "ImmediatePay";    //设定交易类型
-            tPaymentRequest.dicOrder["OrderNo"] = "ON200412230001'";                       //设定订单编号
+            tPaymentRequest.dicOrder["OrderNo"] = OrderNo;                       //设定订单编号
             tPaymentRequest.dicOrder["ExpiredDate"] = "20240619104901";//设定订单保存时间 非必须
-            tPaymentRequest.dicOrder["OrderAmount"] = "0.01";    //设定交易金额
+            tPaymentRequest.dicOrder["OrderAmount"] = OrderAmount;    //设定交易金额
         //    tPaymentRequest.dicOrder["Fee"] = ""; //设定手续费金额 非必须 
           //  tPaymentRequest.dicOrder["AccountNo"] = ""; //设定支付账户
             tPaymentRequest.dicOrder["CurrencyCode"] = "156";    //设定交易币种
@@ -59,15 +59,15 @@ namespace abcBank
 
             //3、添加订单明细
             System.Collections.Generic.Dictionary<string, string> orderitem = new System.Collections.Generic.Dictionary<string, string>();
-            orderitem["SubMerName"] = "测试二级商户1";    //设定二级商户名称
+            orderitem["SubMerName"] = "慧生活二级商户1";    //设定二级商户名称
             orderitem["SubMerId"] = "12345";    //设定二级商户代码
             orderitem["SubMerMCC"] = "0000";   //设定二级商户MCC码 
-            orderitem["SubMerchantRemarks"] = "测试";   //二级商户备注项
+            orderitem["SubMerchantRemarks"] = "慧生活";   //二级商户备注项
             orderitem["ProductID"] = "IP000001";//商品代码，预留字段
             orderitem["ProductName"] = "慧生活缴费";//商品名称            必须设定
-            orderitem["UnitPrice"] = "0.01";//商品总价
+            orderitem["UnitPrice"] = OrderAmount;//商品总价
             orderitem["Qty"] = "1";//商品数量
-            orderitem["ProductRemarks"] = "测试商品"; //商品备注项
+            orderitem["ProductRemarks"] = "慧生活商品"; //商品备注项
             orderitem["ProductType"] = "充值类";//商品类型
             orderitem["ProductDiscount"] = "1";//商品折扣
             orderitem["ProductExpiredDate"] = "10";//商品有效期
@@ -88,10 +88,10 @@ namespace abcBank
             tPaymentRequest.dicRequest["SplitAccTemplate"] = "";      //分账模版编号
              
             //5、传送支付请求并取得支付网址
-            // tPaymentRequest.postJSONRequest();
+            tPaymentRequest.postJSONRequest();
 
             //多商户
-            tPaymentRequest.extendPostJSONRequest(1);
+          //   tPaymentRequest.extendPostJSONRequest(1);
             StringBuilder strMessage = new StringBuilder();
             string ReturnCode = JSON.GetKeyValue("ReturnCode");
             string ErrorMessage = JSON.GetKeyValue("ErrorMessage");
@@ -108,7 +108,7 @@ namespace abcBank
                 //7、支付请求提交失败，商户自定后续动作
                 strMessage.Append("ReturnCode   = [" + ReturnCode + "]<br/>");
                 strMessage.Append("ErrorMessage = [" + ErrorMessage + "]<br/>");
-                return ReturnCode;
+                return ReturnCode+ ErrorMessage;
             }
 
        
