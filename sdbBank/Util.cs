@@ -129,7 +129,193 @@ namespace sdbBank
         }
 
 
+        /// <summary>
+        ///  单个银行卡开通查询
+        /// </summary> 
+        /// <returns></returns>
+        public static string UnionAPI_QueryOPNData(string customerId,string accNo)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+            input.put("accNo", accNo);  //银行卡号
+
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_QueryOPN";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_QueryOPN.do";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
+
+
+        /// <summary>
+        /// 已开通银行卡列表查询
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        public static string UnionAPI_OpenedData(string customerId)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_Opened";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_Opened.do";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+         
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
+    
+      
+        /// <summary>
+        /// 发送短信
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="OpenId"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public static string UnionAPI_SSMSData(string customerId, string OpenId, decimal amount)
+        {
+            String timestamp = $"{DateTime.Now:yyyyMMddHHmmss}";
+            String datetamp = timestamp.substring(0, 8);  //日期	
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+            var fixOrderID = SDKConfig.MasterID + datetamp + getOrderId();
+            input.put("orderId", fixOrderID);
+
+
+            input.put("currency", "RMB");
+
+            input.put("OpenId", OpenId);
+            input.put("amount", amount);
+            input.put("paydate", timestamp);
+
+
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_SSMS";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_SSMS.do";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString()+" 订单号"+ fixOrderID+ "  下单时间" + timestamp;
+        }
+
+
+
+        /// <summary>
+        /// 发起后台支付交易
+        /// </summary>
+         /// <returns></returns>
+        public static string UnionAPI_SubmitData(string customerId, string OpenId, decimal amount, string orderID, string timestamp,string verifyCode)
+        {
+          
+            String datetamp = timestamp.substring(0, 8);  //日期	
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+
+            input.put("orderId", orderID);
+
+
+            input.put("currency", "RMB");
+
+            input.put("OpenId", OpenId);
+            input.put("amount", amount);
+            input.put("paydate", timestamp);
+
+            input.put("remark", "unionpay01 ");
+            input.put("objectName", "unionpay01");
+            input.put("validtime", "0");
+            input.put("NOTIFYURL", SDKConfig.BackUrl);//异步通知地址
+            input.put("verifyCode", verifyCode);
+        
+                        KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_Submit";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_Submit.do";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
 
 
         #endregion

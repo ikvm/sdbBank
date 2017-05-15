@@ -159,13 +159,7 @@ namespace Pingan.Controllers
 
         #region 平安银联接口
 
-
-
-
-
-        #endregion
-
-
+         
         //银行卡开通
         public ActionResult UnionAPI_OpenDemo()
         {
@@ -192,7 +186,62 @@ namespace Pingan.Controllers
 
         }
 
+        /// <summary>
+        /// 单个银行卡开通查询
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_QueryOPNQuery(string accNo= "6226330151030000")
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            var cc = Util.UnionAPI_QueryOPNData(customerId, accNo);
+            return Content("单个银行卡开通查询(自行处理):" + cc);
+        }
 
+
+
+        /// <summary>
+        /// 已开通银行卡列表查询接口  localhost:4113/home/UnionAPI_OpenedQuery
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_OpenedQuery()
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            var cc = Util.UnionAPI_OpenedData(customerId);
+            return Content("已开通银行卡列表(自行处理):" + cc);
+        }
+
+        /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_SSMS()
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            string OpenId = "20003111462016051388235939";    //银行卡开通ID 
+            decimal amount= Convert.ToDecimal(0.01);
+
+            var cc = Util.UnionAPI_SSMSData(customerId, OpenId, amount);
+            return Content("发送验证码返回(不需要处理):" + cc);
+        }
+
+
+
+        /// <summary>
+        /// 发起后台支付交易   orderID timestamp  来源上次发送sms时得到的
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_Submit(string orderID,string timestamp)
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            string OpenId = "20003111462016051388235939";    //银行卡开通ID 
+            decimal amount = Convert.ToDecimal(0.01);
+            string verifyCode = "111111";   //验证码
+            var cc = Util.UnionAPI_SubmitData(customerId, OpenId, amount, orderID, timestamp, verifyCode);
+            return Content("发起后台支付交易:" + cc);
+        }
+
+
+        #endregion
 
         #region 网关支付
 
@@ -277,20 +326,12 @@ namespace Pingan.Controllers
                     KeyedCollection output = Util.parseOrigData(orig);
 
                     MicroWeb.General.Common.LogResult("订单详细信息" + output);
-                    MicroWeb.General.Common.LogResult("订单状态" + output.getDataValue("status"));
+                    MicroWeb.General.Common.LogResult("订单状态" + output.getDataValue("status"));   //对银联来说 01为成功，02为失败
                     MicroWeb.General.Common.LogResult("订单号" + output.getDataValue("orderId"));
                     MicroWeb.General.Common.LogResult("商品描述" + output.getDataValue("objectName"));
                     MicroWeb.General.Common.LogResult("备注" + output.getDataValue("remark"));
-                    //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-                    //System.out.println("---手续费金额---" + output.getDataValue("charge"));
-                    //System.out.println("---商户号---" + output.getDataValue("masterId"));
-
-                    //System.out.println("---币种---" + output.getDataValue("currency"));
-                    //System.out.println("---订单金额---" + output.getDataValue("amount"));
-                    //System.out.println("---下单时间---" + output.getDataValue("paydate"));
-
-                    //System.out.println("---订单有效期---" + output.getDataValue("validtime"));
-                    return Content("支付完成，请等待系统验证，备注字段"+ output.getDataValue("remark"));
+                   
+                    return Content("完成，请等待系统验证，备注字段"+ output.getDataValue("remark"));
                 }
             }
             catch (Exception e)
@@ -328,7 +369,7 @@ namespace Pingan.Controllers
                 orig = Base64.DecodeBase64(orig, encoding);
                 sign = Base64.DecodeBase64(sign, encoding);
 
-                 //此方法改成以上的方法 
+                 //此方法固定，改成上面动态的方法 
               //  result = SignCheck.verifyData(orig, sign);
                 BankService.BankService ba = new BankService.BankService();
                 var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
@@ -336,7 +377,7 @@ namespace Pingan.Controllers
                 if (webrsaVerfyDecode)
                 {
                     KeyedCollection output = Util.parseOrigData(orig);
-                    return Content("支付完成，请等待系统验证，备注字段" + output.getDataValue("remark"));
+                    return Content("完成，请等待系统验证，备注字段" + output.getDataValue("remark"));
                     //做具体业务操作
                 }
             }

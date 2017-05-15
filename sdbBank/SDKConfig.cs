@@ -17,6 +17,7 @@ namespace sdbBank
         private static string sdblocalverifyUrl = config.AppSettings.Settings["sdbLocalVerifyUrl"].Value;//功能：读取配置文件获取本地验签地址
         
         private static string sdbqueryurl = config.AppSettings.Settings["sdbQueryUrl"].Value;//功能：读取配置文件获取查询地址
+        private static string sdbunionurl = config.AppSettings.Settings["sdbUnionUrl"].Value;//功能：读取配置文件获取银联查询地址
 
         public static string sdbLocalVerifyUrl
         {
@@ -30,6 +31,13 @@ namespace sdbBank
             get { return SDKConfig.sdbqueryurl; }
             set { SDKConfig.sdbqueryurl = value; }
         }
+
+        public static string sdbUnionUrl
+        {
+            get { return SDKConfig.sdbunionurl; }
+            set { SDKConfig.sdbunionurl = value; }
+        }
+
 
 
         public static string sdbKeyPass
