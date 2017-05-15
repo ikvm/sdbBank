@@ -148,6 +148,54 @@ namespace Pingan.Controllers
 
         #endregion
 
+        // GET: Home
+        public ActionResult Index()
+        {
+
+            //  return Redirect("/home/sdbPayDemo");
+            return View();
+        }
+
+
+        #region 平安银联接口
+
+
+
+
+
+        #endregion
+
+
+        //银行卡开通
+        public ActionResult UnionAPI_OpenDemo()
+        {
+            String orig = "";  //原始数据
+            String sign = "";  //签名数据
+            String encoding = "GBK";
+            try
+            {
+                string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+                orig = Util.CreateUnionAPI_OpenString(customerId);
+
+                sign = MD5WithRSA.sdbPaySign(orig);
+             orig = Base64.EncodeBase64(orig, encoding);  //原始数据先做Base64Encode转码
+           sign = Base64.EncodeBase64(sign, encoding);  //签名数据先做Base64Encode转码
+                  orig = HttpUtility.UrlEncode(orig, Encoding.GetEncoding("GBK"));  //Base64Encode转码后原始数据,再做URL转码
+                 sign =  HttpUtility.UrlEncode(sign, Encoding.GetEncoding("GBK"));  //Base64Encode转码后签名数据,再做URL转码
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            string sHtmlText = Util.BuildRequest(sign, orig, "post", "确认");
+            return Content(sHtmlText);
+
+        }
+
+
+
+        #region 网关支付
+
 
 
         ///home/sdbPayDemo
@@ -303,14 +351,8 @@ namespace Pingan.Controllers
         }
 
 
+        #endregion
 
-        // GET: Home
-        public ActionResult Index()
-        {
-
-            //  return Redirect("/home/sdbPayDemo");
-            return View();
-        }
 
         #region 对账操作
 

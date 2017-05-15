@@ -105,6 +105,36 @@ namespace sdbBank
         }
 
 
+        #region 银联相关
+
+        public static string CreateUnionAPI_OpenString(string customerId)
+        {
+          
+
+            String timestamp = $"{DateTime.Now:yyyyMMddHHmmss}";
+            String datetamp = timestamp.substring(0, 8);  //日期	
+
+
+            KeyedCollection inputOrig = new KeyedCollection("inputOrig");
+
+            inputOrig.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+       
+            inputOrig.put("customerId", customerId);  //商户会员号   30位
+            inputOrig.put("orderId", SDKConfig.MasterID + datetamp + getOrderId());  //订单号，严格遵守格式：商户号+8位日期YYYYMMDD+8位流水
+
+            inputOrig.put("dateTime", timestamp);  // 时间，YYYYMMDDHHMMSS	
+     
+
+            return inputOrig.toString().replace("\n", "").replace("\t", "");
+        }
+
+
+
+
+
+        #endregion
+
+
 
         #region 处理请求数据
 
