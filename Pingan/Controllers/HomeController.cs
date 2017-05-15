@@ -187,7 +187,7 @@ namespace Pingan.Controllers
         }
 
         /// <summary>
-        /// 单个银行卡开通查询
+        /// 单个银行卡开通查询  http://localhost:4113/home/UnionAPI_QueryOPNQuery
         /// </summary>
         /// <returns></returns>
         public ActionResult UnionAPI_QueryOPNQuery(string accNo= "6226330151030000")
@@ -316,7 +316,7 @@ namespace Pingan.Controllers
                 MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
                 if (wsdl.toString() == "wsdlFail")
                 {
-                    return Content("验签出错");
+                    return Content("验签出错,原因1查看sdbLocalVerifyUrl配置的地址能否访问");
                 }
 
                 //  result = SignCheck.verifyData(orig, sign);
