@@ -63,6 +63,9 @@
     <Reference Include="IKVM.OpenJDK.XML.Parse">
       <HintPath>..\lib\IKVM.OpenJDK.XML.Parse.dll</HintPath>
     </Reference>
+    <Reference Include="MicroWeb.General">
+      <HintPath>..\lib\MicroWeb.General.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />

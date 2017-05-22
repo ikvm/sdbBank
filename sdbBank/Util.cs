@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using com.ecc.emp.data;
+using com.ecc.emp.log;
 using ikvm.extensions;
 using java.util;
  
@@ -147,7 +148,12 @@ namespace sdbBank
             String toOrig = input.toString().replace("\n", "").replace("\t", "");
             String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_QueryOPN.do";
 
+            MicroWeb.General.Common.LogResult("单个银行卡businessCode"+ businessCode);
+            MicroWeb.General.Common.LogResult("单个银行卡toOrig" + toOrig);
+            MicroWeb.General.Common.LogResult("单个银行卡toUrl" + toUrl);
+
             output = NETExecute(businessCode, toOrig, toUrl);
+            MicroWeb.General.Common.LogResult("单个银行卡output" + output);
 
             String errorCode = (String)output.getDataValue("errorCode");
             String errorMsg = (String)output.getDataValue("errorMsg");
@@ -482,14 +488,30 @@ namespace sdbBank
             String fromOrig = null;
    String fromSign = null;
             String encoding = "GBK";
+            MicroWeb.General.Common.LogResult("toOrig为" + toOrig);
             String toSign = MD5WithRSA.sdbPaySign(toOrig);
+
+            MicroWeb.General.Common.LogResult("toSign^^MD5WithRSA加密后" + toSign);
             String toSignData = Base64.EncodeBase64(toSign, encoding);
+            MicroWeb.General.Common.LogResult("toSignData^^EncodeBase64后" + toSignData);
             String toOrigData = Base64.EncodeBase64(toOrig, encoding);
+            MicroWeb.General.Common.LogResult("toOrigData^^EncodeBase64后" + toOrigData);
             toSignData = System.Web.HttpUtility.UrlEncode(toSignData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后原始数据,再做URL转码
            toOrigData = System.Web.HttpUtility.UrlEncode(toOrigData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后签名数据,再做URL转码
+
+            MicroWeb.General.Common.LogResult("toSignData^^URL转码" + toSignData);
+            MicroWeb.General.Common.LogResult("toOrigData^^URL转码" + toOrigData);
             string aOutputData = null;
+
             aOutputData = "orig=" + toOrigData + "&sign=" + toSignData + "&businessCode=" + businessCode.getBytes(encoding);
-          var response =  PAHelper.NcPost(toUrl, aOutputData);
+
+            MicroWeb.General.Common.LogResult("aOutputData为" + aOutputData);
+
+
+            var response =  PAHelper.NcPost(toUrl, aOutputData);
+
+            MicroWeb.General.Common.LogResult("response为" + response);
+
             Properties res = parseStringToProperties(response, "\r\n");
             fromSign = ((String)res.get("sign")).trim();
             fromOrig = ((String)res.get("orig")).trim();
@@ -499,6 +521,8 @@ namespace sdbBank
             fromSign = Base64.DecodeBase64(fromSign, encoding);
             fromOrig = Base64.DecodeBase64(fromOrig, encoding);
 
+            MicroWeb.General.Common.LogResult("fromSign为" + fromSign);
+            MicroWeb.General.Common.LogResult("fromOrig为" + fromOrig);
             try
             {
                 recv.addDataField("toSign", toSign);
@@ -622,6 +646,59 @@ namespace sdbBank
             String errorMsg = (String)output.getDataValue("errorMsg");
 
 
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+                //System.out.println("---手续费金额---" + output.getDataValue("charge"));
+                //System.out.println("---商户号---" + output.getDataValue("masterId"));
+                //System.out.println("---订单号---" + output.getDataValue("orderId"));
+                //System.out.println("---币种---" + output.getDataValue("currency"));
+                //System.out.println("---订单金额---" + output.getDataValue("amount"));
+                //System.out.println("---下单时间---" + output.getDataValue("paydate"));
+                //System.out.println("---商品描述---" + output.getDataValue("objectName"));
+                //System.out.println("---订单有效期---" + output.getDataValue("validtime"));
+                //System.out.println("---备注---" + output.getDataValue("remark"));
+                //System.out.println("---本金清算标志---" + output.getDataValue("settleflg"));  //1已清算，0待清算
+                //System.out.println("---本金清算时间---" + output.getDataValue("settletime"));
+                //System.out.println("---手续费清算标志---" + output.getDataValue("chargeflg"));  //1已清算，0待清算
+                //System.out.println("---手续费清算时间---" + output.getDataValue("chargetime"));
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
+
+
+
+        /// <summary>
+        /// 每日对账单查询接口
+        /// </summary> 
+        /// <returns></returns>
+        public static string KH0003Data(string Date)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("date", Date);  //查询时间 YYYYMMDD 
+         
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "KH0003";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbQueryUrl + "KH0003.pay";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+            String sumAmount = (String)output.getDataValue("sumAmount");  //总金额
+            String sumCount = (String)output.getDataValue("sumCount");   //总笔数
             if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));

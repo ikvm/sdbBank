@@ -425,6 +425,23 @@ namespace Pingan.Controllers
             return Content("返回KH0002对帐结果:" + cc);
         }
 
+
+        /// <summary>
+        /// 每日对账单查询接口 对账日期，格式：YYYYMMDD   T-1日  http://localhost:4113/home/KH0003Result?Date=20170518
+        /// </summary>
+        /// <param name="Date"></param>
+        /// <returns></returns>
+        public ActionResult KH0003Result(string  Date = "20170518")
+        {
+
+            var cc = Util.KH0003Data( Date);
+
+            return Content("返回KH0003对帐结果:" + cc);
+        }
+
+
+
+
         #endregion
 
     }
