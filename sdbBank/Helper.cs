@@ -12,6 +12,9 @@ namespace sdbBank
     public class AsymmetricAlgorithmHelper<T>
         where T : AsymmetricAlgorithm, new()
     {
+
+
+
         protected static TResult Execute<TResult>(string key, Func<T, TResult> func)
         {
             using (T algorithm = new T())

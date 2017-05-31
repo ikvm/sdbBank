@@ -293,6 +293,91 @@ namespace sdbBank
         }
 
 
+        /// <summary>
+        /// 20170531 修改了 ContentType等
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="postCont"></param>
+        /// <param name="timeOut"></param>
+        /// <returns></returns>
+        public static string NcPostUnionNew(string url, string postCont, int timeOut = 60 )
+        {
+            Encoding encoding = Encoding.GetEncoding("GBK");
+            byte[] bytesToPost = encoding.GetBytes(postCont);
+
+            string cookieheader = string.Empty;
+
+            var cookieCon = new CookieContainer();
+
+            #region 创建HttpWebRequest对象
+
+            var httpRequest = (HttpWebRequest)WebRequest.Create(url);
+
+            #endregion
+
+            #region 初始化HtppWebRequest对象
+
+            httpRequest.CookieContainer = cookieCon;
+            httpRequest.UserAgent = "payClient";
+              httpRequest.ContentType = "application/x-www-form-urlencoded";
+ 
+            httpRequest.Method = "POST";
+            httpRequest.Timeout = timeOut * 1000;
+            httpRequest.Accept = "text/xml";
+ 
+
+
+            if (cookieheader.Equals(string.Empty))
+            {
+                httpRequest.CookieContainer.GetCookieHeader(new Uri(url));
+            }
+            else
+            {
+                httpRequest.CookieContainer.SetCookies(new Uri(url), cookieheader);
+            }
+
+            #endregion
+
+            string stringResponse = "";
+            try
+            {
+
+                #region 附加Post给服务器的数据到HttpWebRequest对象
+
+                httpRequest.ContentLength = bytesToPost.Length;
+                Stream requestStream = httpRequest.GetRequestStream();
+                requestStream.Write(bytesToPost, 0, bytesToPost.Length);
+
+                requestStream.Close();
+
+                #endregion
+
+
+                #region 读取服务器返回信息
+
+
+                Stream responseStream = httpRequest.GetResponse().GetResponseStream();
+
+                if (responseStream != null)
+                {
+                    using (
+                        var responseReader = new StreamReader(responseStream, Encoding.GetEncoding("GBK")))
+                    {
+                        stringResponse = responseReader.ReadToEnd();
+                    }
+                    responseStream.Close();
+                }
+
+                #endregion
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return stringResponse;
+        }
+
+
 
 
 

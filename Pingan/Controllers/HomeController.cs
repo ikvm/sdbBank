@@ -147,7 +147,7 @@ namespace Pingan.Controllers
 
 
         #endregion
-
+      
         // GET: Home
         public ActionResult Index()
         {
@@ -217,8 +217,8 @@ namespace Pingan.Controllers
         public ActionResult UnionAPI_SSMS()
         {
             string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-            string OpenId = "20003111462016051388235939";    //银行卡开通ID 
-            decimal amount= Convert.ToDecimal(0.01);
+            string OpenId = "20003111462017051540429706";    //银行卡开通ID 
+            decimal amount= Convert.ToDecimal(0.1);   //单笔支付不能小于0.1元
 
             var cc = Util.UnionAPI_SSMSData(customerId, OpenId, amount);
             return Content("发送验证码返回(不需要处理):" + cc);
@@ -227,18 +227,34 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 发起后台支付交易   orderID timestamp  来源上次发送sms时得到的
+        /// 发起后台支付交易   orderID timestamp  来源上次发送sms时得到的  http://localhost:4113/home/UnionAPI_Submit?orderID=20003111462017053147225799&timestamp=20170531153503
         /// </summary>
         /// <returns></returns>
         public ActionResult UnionAPI_Submit(string orderID,string timestamp)
         {
             string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-            string OpenId = "20003111462016051388235939";    //银行卡开通ID 
-            decimal amount = Convert.ToDecimal(0.01);
+            string OpenId = "20003111462017051540429706";    //银行卡开通ID 
+            decimal amount = Convert.ToDecimal(0.1);
             string verifyCode = "111111";   //验证码
             var cc = Util.UnionAPI_SubmitData(customerId, OpenId, amount, orderID, timestamp, verifyCode);
             return Content("发起后台支付交易:" + cc);
         }
+
+
+
+        /// <summary>
+        /// 后台支付交易结果   orderID    来源上次发送sms时得到的  http://localhost:4113/home/UnionAPI_OrderQuery?orderID=20003111462017053147225799 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_OrderQuery(string orderID )
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+      
+            var cc = Util.UUnionAPI_OrderQueryData(customerId,   orderID );
+            return Content("后台支付交易结果:" + cc);
+        }
+
+
 
 
         #endregion

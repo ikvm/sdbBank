@@ -13,9 +13,12 @@ using TimeZone = System.TimeZone;
 
 namespace sdbBank
 {
-   public  class Util
-    {
 
+     
+
+    public  class Util
+    {
+    
         /// <summary>
         /// 创建提交的数据test
         /// </summary>
@@ -276,7 +279,7 @@ namespace sdbBank
         public static string UnionAPI_SubmitData(string customerId, string OpenId, decimal amount, string orderID, string timestamp,string verifyCode)
         {
           
-            String datetamp = timestamp.substring(0, 8);  //日期	
+         //   String datetamp = timestamp.substring(0, 8);  //日期	
             com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
             com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 
@@ -313,6 +316,52 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return output.toString();
+        }
+
+
+
+
+
+        /// <summary>
+        /// 发起后台支付交易
+        /// </summary>
+        /// <returns></returns>
+        public static string UUnionAPI_OrderQueryData(string customerId,   string orderID )
+        {
+
+         
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+
+            input.put("orderId", orderID);
+             
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_OrderQuery";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_OrderQuery.do";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+                return output.getDataValue("status").toString();
 
             }
             else
@@ -503,12 +552,17 @@ namespace sdbBank
             MicroWeb.General.Common.LogResult("toOrigData^^URL转码" + toOrigData);
             string aOutputData = null;
 
-            aOutputData = "orig=" + toOrigData + "&sign=" + toSignData + "&businessCode=" + businessCode.getBytes(encoding);
+
+        //    string a  = "PGtDb2xsIGlkPSJpbnB1dCIgYXBwZW5kPSJmYWxzZSI%2BPGZpZWxkIGlkPSJtYXN0ZXJJZCIgdmFs%0D%0AdWU9IjIwMDAzMTExNDYiLz48ZmllbGQgaWQ9ImN1c3RvbWVySWQiIHZhbHVlPSJTSDAwMDAxIi8%2B%0D%0APGZpZWxkIGlkPSJhY2NObyIgdmFsdWU9IjYyMjYzMzAxNTEwMzAwMDAiLz48L2tDb2xsPg%3D%3D%0D%0A";
+          //  string b = "NDM5NzczZWJmOTg1NTY0NGQxM2MzZGI0ZTA3ZDgwM2IyZjEzNTc1MjllMjdhZDI1NGJkNTEyYzMy%0D%0AZjg4MDJiOTUwMDAyZmE3YTQ0MDI1YTA0ZjQ2MGE5MTFlYWU3NDdhMjkwYjA0YjMyY2IxZDBiYzUw%0D%0AZWVjNjI4N2UwYTU0MjYwNWRjM2U4ZjYwOThiYjhmNjZiOGYxYTEzMzNjMzI3ZmQwNDVlZWM2NmEz%0D%0ANWEzMTk2NGE5YjMzYmIxOGQyNTlmZmI0ODhmZjgxYmFiMjY1OGE5MzgwYzhmOWE4ZjA2MjQ3YTZm%0D%0AOWJlMjYyOTk1MjMyOTIxZDJkNjE4MzYwYTE2NQ%3D%3D%0D%0A";
+
+          aOutputData = "orig=" + toOrigData + "&sign=" + toSignData + "&businessCode=" + businessCode.getBytes(encoding);
+         //    aOutputData = "orig=" + a + "&sign=" + b + "&businessCode=" + businessCode.getBytes(encoding);
 
             MicroWeb.General.Common.LogResult("aOutputData为" + aOutputData);
 
 
-            var response =  PAHelper.NcPost(toUrl, aOutputData);
+            var response =  PAHelper.NcPostUnionNew(toUrl, aOutputData);
 
             MicroWeb.General.Common.LogResult("response为" + response);
 
