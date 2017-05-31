@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using com.ecc.emp.ad.mvc;
 using com.ecc.emp.data;
 using com.ecc.emp.log;
+using Codeplex.Data;
 using ikvm.extensions;
 using java.util;
  
@@ -13,8 +15,18 @@ using TimeZone = System.TimeZone;
 
 namespace sdbBank
 {
+    /// <summary>
+    /// 银行列表model
+    /// </summary>
+    public class UnionBankModel
+    {
+        public string OpenId { get; set; }
+        public string accNo { get; set; }
+        public string plantBankName { get; set; }
 
-     
+    }
+
+
 
     public  class Util
     {
@@ -166,12 +178,56 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-
+                return output.getDataValue("status").toString();
             }
             else
             {
                 //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();
+            }
+            return output.toString();
+        }
+
+
+
+        /// <summary>
+        ///  单个银行卡关闭
+        /// </summary> 
+        /// <returns></returns>
+        public static string UnionAPI_OPNCLData(string customerId, string OpenId)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("customerId", customerId);  //会员号，商户自行生成
+            input.put("OpenId", OpenId);  //银行卡ID
+
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "UnionAPI_OPNCL";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbUnionUrl + "UnionAPI_OPNCL.do";
+ 
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+           
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+                //System.out.println("---订单状态---" + output.getDataValue("status"));
+                //System.out.println("---支付完成时间---" + output.getDataValue("date"));
+                return output.getDataValue("status").toString();
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();
             }
             return output.toString();
         }
@@ -206,12 +262,33 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-         
+                String OpenId = null;
+                String accNo = null;
+                String plantBankName = null ;
+                List<UnionBankModel> Mlist=new List<UnionBankModel>();
+                IndexedCollection icoll = (IndexedCollection)output.getDataElement("unionInfo");
+                for (int i = 0; i < icoll.size(); i++)
+                {
+                    //取出index为i的一条记录，结构为KeyedCollection
+                    com.ecc.emp.data.KeyedCollection kcoll = (com.ecc.emp.data.KeyedCollection)icoll.getElementAt(i);
+                    OpenId = (String)kcoll.getDataValue("OpenId");
+                    accNo = (String)kcoll.getDataValue("accNo");
+                    plantBankName = (String)kcoll.getDataValue("plantBankName");
+                    UnionBankModel m=new UnionBankModel();
+                    m.OpenId = OpenId;
+                    m.accNo = accNo;
+                    m.plantBankName = plantBankName;
+                    Mlist.Add(m);
+                }
+                return DynamicJson.Serialize(Mlist);
+
+                //      return output.getDataValue("status").toString();
             }
             else
             {
                 //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();
             }
             return output.toString();
         }
@@ -260,12 +337,13 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-
+           return output.getDataValue("status").toString();
             }
             else
             {
                 //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();
             }
             return output.toString()+" 订单号"+ fixOrderID+ "  下单时间" + timestamp;
         }
@@ -316,12 +394,13 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-
+                return output.getDataValue("status").toString();
             }
             else
             {
                 //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();  
             }
             return output.toString();
         }
@@ -331,7 +410,7 @@ namespace sdbBank
 
 
         /// <summary>
-        /// 发起后台支付交易
+        /// 后台支付交易查询
         /// </summary>
         /// <returns></returns>
         public static string UUnionAPI_OrderQueryData(string customerId,   string orderID )
@@ -368,6 +447,7 @@ namespace sdbBank
             {
                 //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+                return output.getDataValue("errorMsg").toString();
             }
             return output.toString();
         }

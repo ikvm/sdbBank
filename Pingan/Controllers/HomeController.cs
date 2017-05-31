@@ -159,8 +159,8 @@ namespace Pingan.Controllers
 
         #region 平安银联接口
 
-         
-        //银行卡开通
+
+        //银行卡开通  localhost:4113/home/UnionAPI_OpenDemo
         public ActionResult UnionAPI_OpenDemo()
         {
             String orig = "";  //原始数据
@@ -214,14 +214,14 @@ namespace Pingan.Controllers
         /// 发送验证码
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_SSMS()
+        public ActionResult UnionAPI_SSMS(string   money="0.1",string OpenId = "20003111462017051540429706")
         {
             string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-            string OpenId = "20003111462017051540429706";    //银行卡开通ID 
-            decimal amount= Convert.ToDecimal(0.1);   //单笔支付不能小于0.1元
+            //OpenId为银行卡开通ID 
+            decimal amount = Convert.ToDecimal(money);   //单笔支付不能小于0.1元
 
             var cc = Util.UnionAPI_SSMSData(customerId, OpenId, amount);
-            return Content("发送验证码返回(不需要处理):" + cc);
+            return Content("发送验证码返回(订单号,下单时间要用在下一个方法):" + cc);
         }
 
 
@@ -230,12 +230,12 @@ namespace Pingan.Controllers
         /// 发起后台支付交易   orderID timestamp  来源上次发送sms时得到的  http://localhost:4113/home/UnionAPI_Submit?orderID=20003111462017053147225799&timestamp=20170531153503
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_Submit(string orderID,string timestamp)
+        public ActionResult UnionAPI_Submit(string orderID,string timestamp, string verifyCode="111111", string money = "0.1", string OpenId = "20003111462017051540429706")
         {
             string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-            string OpenId = "20003111462017051540429706";    //银行卡开通ID 
-            decimal amount = Convert.ToDecimal(0.1);
-            string verifyCode = "111111";   //验证码
+   
+            decimal amount = Convert.ToDecimal(money);
+            //短信验证码 verifyCode
             var cc = Util.UnionAPI_SubmitData(customerId, OpenId, amount, orderID, timestamp, verifyCode);
             return Content("发起后台支付交易:" + cc);
         }
@@ -255,6 +255,18 @@ namespace Pingan.Controllers
         }
 
 
+
+
+        /// <summary>
+        /// 单个银行卡关闭  http://localhost:4113/home/UnionAPI_OPNCL
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UnionAPI_OPNCL(string OpenId = "20003111462017051540429706")
+        {
+            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            var cc = Util.UnionAPI_OPNCLData(customerId, OpenId);
+            return Content("单个银行卡关闭(自行处理):" + cc);
+        }
 
 
         #endregion
