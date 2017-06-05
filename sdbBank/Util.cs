@@ -522,6 +522,37 @@ namespace sdbBank
 
 
         /// <summary>
+        /// 银联用的BuildRequest
+        /// </summary>
+        /// <param name="sign"></param>
+        /// <param name="orig"></param>
+        /// <param name="strMethod"></param>
+        /// <param name="strButtonValue"></param>
+        /// <returns></returns>
+        public static string UnionBuildRequest(string sign, string orig, string strMethod, string strButtonValue = "提交")
+        {
+
+            StringBuilder sbHtml = new StringBuilder();
+            string sdbUnionUrl = SDKConfig.sdbUnionUrl + "UnionAPI_Open.do";
+            sbHtml.Append("<form id='sdbsubmit' name='NetPayForm' action='" + sdbUnionUrl + "' method='" + strMethod.ToLower().Trim() + "'>");
+
+
+            sbHtml.Append("<input type='hidden' name='sign' value='" + sign + "'/>");
+            sbHtml.Append("<input type='hidden' name='orig' value='" + orig + "'/>");
+            sbHtml.Append("<input type='hidden' name='returnurl' value='" + SDKConfig.UnionsdbFrontUrl + "'/>");
+            sbHtml.Append("<input type='hidden' name='NOTIFYURL' value='" + SDKConfig.UnionsdbBackUrl + "'/>");
+
+
+            //submit按钮控件请不要含有name属性
+            sbHtml.Append("<input type='submit' value='" + strButtonValue + "' style='display:none;'></form>");
+
+            sbHtml.Append("<script>document.forms['sdbsubmit'].submit();</script>");
+
+            return sbHtml.ToString();
+        }
+
+
+        /// <summary>
         /// 建立请求，以表单HTML形式构造（默认）----网页版用
         /// </summary>
         /// <param name="sign">请求参数</param>

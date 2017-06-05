@@ -19,6 +19,24 @@ namespace sdbBank
         private static string sdbqueryurl = config.AppSettings.Settings["sdbQueryUrl"].Value;//功能：读取配置文件获取查询地址
         private static string sdbunionurl = config.AppSettings.Settings["sdbUnionUrl"].Value;//功能：读取配置文件获取银联查询地址
 
+        private static string UnionsdbfrontUrl = config.AppSettings.Settings["UnionsdbfrontUrl"].Value;//功能：读取配置文件获取前台通知地址
+        private static string UnionsdbbackUrl = config.AppSettings.Settings["UnionsdbbackUrl"].Value;//功能：读取配置文件获取前台通知地址
+
+
+
+        public static string UnionsdbFrontUrl
+        {
+            get { return SDKConfig.UnionsdbfrontUrl; }
+            set { SDKConfig.UnionsdbfrontUrl = value; }
+        }
+        public static string UnionsdbBackUrl
+        {
+            get { return SDKConfig.UnionsdbbackUrl; }
+            set { SDKConfig.UnionsdbbackUrl = value; }
+        }
+
+
+
         public static string sdbLocalVerifyUrl
         {
             get { return SDKConfig.sdblocalverifyUrl; }

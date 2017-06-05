@@ -181,7 +181,7 @@ namespace Pingan.Controllers
             {
                 e.printStackTrace();
             }
-            string sHtmlText = Util.BuildRequest(sign, orig, "post", "确认");
+            string sHtmlText = Util.UnionBuildRequest(sign, orig, "post", "确认");
             return Content(sHtmlText);
 
         }
@@ -455,11 +455,11 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 每日对账单查询接口 对账日期，格式：YYYYMMDD   T-1日  http://localhost:4113/home/KH0003Result?Date=20170518
+        /// 每日对账单查询接口 对账日期，格式：YYYYMMDD   T-1日  http://localhost:4113/home/KH0003Result?Date=20170601
         /// </summary>
         /// <param name="Date"></param>
         /// <returns></returns>
-        public ActionResult KH0003Result(string  Date = "20170518")
+        public ActionResult KH0003Result(string  Date = "20170601")
         {
 
             var cc = Util.KH0003Data( Date);
