@@ -44,7 +44,8 @@ namespace Pingan.Controllers
         /// <returns></returns>
         public ActionResult KHKF03(string InAcctNo= "6221558812340000", string InAcctName= "互联网", string TranAmount="5.59")
         {
-            var OrderNumber =  "ZXLKF0320170417TV003";   //20位客户的订单号
+         //   var OrderNumber =  "ZXLKF0320170417TV003";   //20位客户的订单号
+            var OrderNumber =Util.get20OrderID();   //20位客户的订单号
             var oResult = PinganQuery.KHKF03(  InAcctNo,   InAcctName,   TranAmount, OrderNumber);
 
             var cc= PAHelper.getKHKF03Result(oResult);

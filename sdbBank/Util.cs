@@ -23,6 +23,7 @@ namespace sdbBank
         public string OpenId { get; set; }
         public string accNo { get; set; }
         public string plantBankName { get; set; }
+        public string plantBankId { get; set; }
 
     }
 
@@ -92,6 +93,15 @@ namespace sdbBank
             return iRdm;
         }
 
+
+        //取20位订单号
+        public static string get20OrderID()
+        {
+            String orderId;
+            String timestamp = $"{DateTime.Now:yyMMddHHmmss}";
+            orderId = timestamp + getOrderId();
+            return orderId;
+        }
 
         //生成8位随机数
         private static String getOrderId()
@@ -265,6 +275,7 @@ namespace sdbBank
                 String OpenId = null;
                 String accNo = null;
                 String plantBankName = null ;
+                String plantBankId = null;
                 List<UnionBankModel> Mlist=new List<UnionBankModel>();
                 IndexedCollection icoll = (IndexedCollection)output.getDataElement("unionInfo");
                 for (int i = 0; i < icoll.size(); i++)
@@ -274,10 +285,13 @@ namespace sdbBank
                     OpenId = (String)kcoll.getDataValue("OpenId");
                     accNo = (String)kcoll.getDataValue("accNo");
                     plantBankName = (String)kcoll.getDataValue("plantBankName");
+
+                    plantBankId = (String)kcoll.getDataValue("plantBankId");
                     UnionBankModel m=new UnionBankModel();
                     m.OpenId = OpenId;
                     m.accNo = accNo;
                     m.plantBankName = plantBankName;
+                    m.plantBankId = plantBankId;
                     Mlist.Add(m);
                 }
                 return DynamicJson.Serialize(Mlist);
