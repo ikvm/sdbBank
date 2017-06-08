@@ -56,13 +56,17 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 跨行快付结果查询查询   http://localhost:4113/sdb/KHKF04
+        /// 跨行快付结果查询查询   http://localhost:4113/sdb/KHKF04?BussFlowNo=8043431706085110360216
         /// </summary>
         /// <returns></returns>
-        public ActionResult KHKF04(string OrderNumber = "ZXLKF0320170417TV001")
+        public ActionResult KHKF04(string OrderNumber = "ZXLKF0320170417TV001", string BussFlowNo = "")
         {
             //传订单号
             var oResult = PinganQuery.KHKF04(OrderNumber);
+            if (BussFlowNo != "")
+            {
+                oResult = PinganQuery.KHKF04ResultBuss(BussFlowNo);
+            }
 
             var cc = PAHelper.getKHKF04Result(oResult);
 

@@ -27,6 +27,34 @@ namespace sdbBank
 
     }
 
+    /// <summary>
+    /// 订单列表信息查询结果集
+    /// </summary>
+    public class KH0002ResultModel
+    {
+        public string status { get; set; }
+        public string date { get; set; }
+        public string charge { get; set; }
+        public string masterId { get; set; }
+
+        public string orderId { get; set; }
+        public string currency { get; set; }
+        public string amount { get; set; }
+        public string paydate { get; set; }
+
+
+        public string objectName { get; set; }
+        public string validtime { get; set; }
+        public string remark { get; set; }
+        public string settleflg { get; set; }
+
+
+        public string settletime { get; set; }
+        public string chargeflg { get; set; }
+        public string chargetime { get; set; }
+      
+    }
+
 
 
     public  class Util
@@ -827,6 +855,66 @@ namespace sdbBank
 
             if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
             {
+                List<KH0002ResultModel> Mlist = new List<KH0002ResultModel>();
+                   string status = null;
+          string date = null;
+          string charge = null;
+          string masterId = null;
+           string orderId = null;
+          string currency = null;
+          string amount = null;
+          string paydate = null;
+   string objectName = null;
+          string validtime = null;
+          string remark = null;
+          string settleflg = null;
+    string settletime = null;
+          string chargeflg = null;
+          string chargetime = null;
+
+        com.ecc.emp.data.IndexedCollection icoll = (com.ecc.emp.data.IndexedCollection)output.getDataElement("iOrderListDetail");
+                for (int i = 0; i < icoll.size(); i++)
+                {
+                    com.ecc.emp.data.KeyedCollection kcoll = (com.ecc.emp.data.KeyedCollection)icoll.getElementAt(i);
+                     status = (String)kcoll.getDataValue("status");
+                    date = (String)kcoll.getDataValue("date");
+                    charge = (String)kcoll.getDataValue("charge");
+                    masterId = (String)kcoll.getDataValue("masterId");
+                    orderId = (String)kcoll.getDataValue("orderId");
+                    currency = (String)kcoll.getDataValue("currency");
+                    amount = (String)kcoll.getDataValue("amount");
+                    paydate = (String)kcoll.getDataValue("paydate");
+                    objectName = (String)kcoll.getDataValue("objectName");
+                    validtime = (String)kcoll.getDataValue("validtime");
+                    remark = (String)kcoll.getDataValue("remark");
+                    settleflg = (String)kcoll.getDataValue("settleflg");
+                    settletime = (String)kcoll.getDataValue("settletime");
+                    chargeflg = (String)kcoll.getDataValue("chargeflg");
+                    chargetime = (String)kcoll.getDataValue("chargetime");
+
+                    KH0002ResultModel m = new KH0002ResultModel();
+                    m.status = status;         
+                    m.date = date;
+                    m.charge = charge;
+                    m.masterId = masterId;
+
+                    m.orderId = orderId;
+                    m.currency = currency;
+                    m.amount = amount;
+                    m.paydate = paydate;
+
+                    m.objectName = objectName;
+                    m.validtime = validtime;
+                    m.remark = remark;
+                    m.settleflg = settleflg;
+
+                    m.settletime = settletime;
+                    m.chargeflg = chargeflg;
+                    m.chargetime = chargetime;
+                  
+                    Mlist.Add(m);
+                }
+                return DynamicJson.Serialize(Mlist);
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
                 //System.out.println("---手续费金额---" + output.getDataValue("charge"));

@@ -207,10 +207,42 @@ namespace sdbBank
         }
 
 
-      #region 早期测试
+
+        /// <summary>
+        ///  3.4 单笔付款结果查询 (根据银行返回的业务流水号)
+        /// </summary>
+        /// <param name="BussFlowNo"></param>
+        /// <returns></returns>
+        public static string KHKF04ResultBuss(string BussFlowNo)
+        {
+            string sdbYQAcctNo = PAConfigHelper.GetConfiguration("sdbYQAcctNo");
+
+            string postParams = "{0}";
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<?xml version=\"1.0\" encoding=\"GBK\" ?><Result><AcctNo>");
+            sb.Append(sdbYQAcctNo);   //企业签约帐号
+            sb.Append("</AcctNo>");
+            sb.Append("<OrderNumber>");
+            sb.Append(""); //20位订单号
+            sb.Append("</OrderNumber>");
 
 
-            //3.1 系统状态探测 _无效
+            //两者不能同时为空    只取上面一个的  BussFlowNo为空
+            sb.Append("<BussFlowNo>");
+            sb.Append(BussFlowNo); //银行业务流水号
+            sb.Append("</BussFlowNo>");
+            sb.Append("</Result>");
+            string KHKF04XML = string.Format(postParams, sb.ToString());
+            var str = YQHelp.asemblyYQPackets(YQCode, "KHKF04", KHKF04XML);
+
+            var cc = PAHelper.NcPost(apiUrl, str);
+            return cc;
+        }
+
+        #region 早期测试
+
+
+        //3.1 系统状态探测 _无效
         public static object S001Query()
         {
             string postParams = "{0}";

@@ -427,7 +427,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 单笔订单状态查询  localhost:4113/home/KH0001Result?OrderNO=20003111462017040573393892
+        /// 单笔订单状态查询  http://localhost:4113/home/KH0001Result?OrderNO=20003111462017031115495117
         /// </summary>
         /// <returns></returns>
         public ActionResult KH0001Result(string OrderNO = "")
@@ -445,7 +445,7 @@ namespace Pingan.Controllers
         /// <param name="endDate"></param>
         /// <returns></returns>
 
-        public ActionResult KH0002Result(string beginDate = "20170311000000", string endDate= "20170410240000")
+        public ActionResult KH0002Result(string beginDate = "20170601000000", string endDate= "20170607240000")
         {
 
             var cc = Util.KH0002Data(beginDate, endDate);

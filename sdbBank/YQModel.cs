@@ -37,8 +37,8 @@ namespace sdbBank
     {
         public string OrderNumber { get; set; }
         public string BussFlowNo { get; set; }
-       
 
+ 
     }
 
 

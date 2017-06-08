@@ -197,7 +197,12 @@ namespace sdbBank
                     var xmlstr = source.Substring(p);
 
                     YQKHKF04Model list = XmlDeserialize<YQKHKF04Model>(xmlstr);
-                    return list.RetMsg;
+                    var cc= list.Status;
+                    if (cc != "20" || cc != "30")
+                    {
+                        return list.RetMsg;
+                    }
+                    return cc;
                 }
                 return source;
             }
