@@ -57,6 +57,7 @@ namespace sdbBank
 
 
 
+
     public  class Util
     {
     
@@ -939,6 +940,101 @@ namespace sdbBank
             return output.toString();
         }
 
+
+        /// <summary>
+        /// 订单列表信息查询
+        /// </summary> 
+        /// <returns></returns>
+        public static List<KH0002ResultModel> KH0002DataList(string beginDate, string endDate)
+        {
+            com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+            com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
+
+            input.put("masterId", SDKConfig.MasterID);  //商户号，注意生产环境上要替换成商户自己的生产商户号
+            input.put("beginDate", beginDate);  //查询开始时间（支付完成时间）YYYYMMDDHHMMSS
+            input.put("endDate", endDate);//查询结束时间（支付完成时间）YYYYMMDDHHMMSS
+            KeyedCollection recv = new KeyedCollection();
+            String businessCode = "KH0002";
+            String toOrig = input.toString().replace("\n", "").replace("\t", "");
+            String toUrl = SDKConfig.sdbQueryUrl + "KH0002.pay";
+
+            output = NETExecute(businessCode, toOrig, toUrl);
+
+            String errorCode = (String)output.getDataValue("errorCode");
+            String errorMsg = (String)output.getDataValue("errorMsg");
+            List<KH0002ResultModel> Mlist = new List<KH0002ResultModel>();
+
+            if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
+            {
+        
+                string status = null;
+                string date = null;
+                string charge = null;
+                string masterId = null;
+                string orderId = null;
+                string currency = null;
+                string amount = null;
+                string paydate = null;
+                string objectName = null;
+                string validtime = null;
+                string remark = null;
+                string settleflg = null;
+                string settletime = null;
+                string chargeflg = null;
+                string chargetime = null;
+
+                com.ecc.emp.data.IndexedCollection icoll = (com.ecc.emp.data.IndexedCollection)output.getDataElement("iOrderListDetail");
+                for (int i = 0; i < icoll.size(); i++)
+                {
+                    com.ecc.emp.data.KeyedCollection kcoll = (com.ecc.emp.data.KeyedCollection)icoll.getElementAt(i);
+                    status = (String)kcoll.getDataValue("status");
+                    date = (String)kcoll.getDataValue("date");
+                    charge = (String)kcoll.getDataValue("charge");
+                    masterId = (String)kcoll.getDataValue("masterId");
+                    orderId = (String)kcoll.getDataValue("orderId");
+                    currency = (String)kcoll.getDataValue("currency");
+                    amount = (String)kcoll.getDataValue("amount");
+                    paydate = (String)kcoll.getDataValue("paydate");
+                    objectName = (String)kcoll.getDataValue("objectName");
+                    validtime = (String)kcoll.getDataValue("validtime");
+                    remark = (String)kcoll.getDataValue("remark");
+                    settleflg = (String)kcoll.getDataValue("settleflg");
+                    settletime = (String)kcoll.getDataValue("settletime");
+                    chargeflg = (String)kcoll.getDataValue("chargeflg");
+                    chargetime = (String)kcoll.getDataValue("chargetime");
+
+                    KH0002ResultModel m = new KH0002ResultModel();
+                    m.status = status;
+                    m.date = date;
+                    m.charge = charge;
+                    m.masterId = masterId;
+
+                    m.orderId = orderId;
+                    m.currency = currency;
+                    m.amount = amount;
+                    m.paydate = paydate;
+
+                    m.objectName = objectName;
+                    m.validtime = validtime;
+                    m.remark = remark;
+                    m.settleflg = settleflg;
+
+                    m.settletime = settletime;
+                    m.chargeflg = chargeflg;
+                    m.chargetime = chargetime;
+
+                    Mlist.Add(m);
+                }
+                return Mlist;
+               
+            }
+            else
+            {
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+            }
+            return Mlist;
+        }
 
 
 

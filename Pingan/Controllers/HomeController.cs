@@ -9,6 +9,9 @@ using com.sdb.payclient.core;
 using ikvm.extensions;
 using sdbBank;
 using BankPackage;
+using System.Data;
+using Aspose.Cells;
+using Codeplex.Data;
 
 namespace Pingan.Controllers
 {
@@ -445,10 +448,17 @@ namespace Pingan.Controllers
         /// <param name="endDate"></param>
         /// <returns></returns>
 
-        public ActionResult KH0002Result(string beginDate = "20170601000000", string endDate= "20170607240000")
+        public ActionResult KH0002Result(string beginDate = "20170601000000", string endDate= "20170607240000",string excel="false")
         {
-
+            if (excel == "true")
+            {
+               var t= Util.KH0002DataList(beginDate, endDate);
+                DataSet ds = ListToDataSet<KH0002ResultModel>(t);
+                ReportExcel(ds, "KH"+ beginDate+"_"+ endDate);
+            }
             var cc = Util.KH0002Data(beginDate, endDate);
+
+
 
             return Content("返回KH0002对帐结果:" + cc);
         }
@@ -469,6 +479,54 @@ namespace Pingan.Controllers
 
 
 
+
+        #endregion
+
+        #region 数据转换
+
+        public static DataSet ListToDataSet<T>(List<T> list)
+        {
+            if (list.Count == 0) return new DataSet();
+            var properties = list[0].GetType().GetProperties();
+            var cols = properties.Select(p => new DataColumn(p.Name));
+            var dt = new DataTable();
+            dt.Columns.AddRange(cols.ToArray());
+            list.ForEach(x => dt.Rows.Add(properties.Select(p => p.GetValue(x)).ToArray()));
+            return new DataSet { Tables = { dt } };
+        }
+
+
+        //dataSet导出Excel
+        public void ReportExcel(DataSet ds, string title)
+        {
+            DataTable dt = ds.Tables[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
+            Style sle = wb.Styles[wb.Styles.Add()];
+            cells.SetRowHeight(0, 20);
+
+            if (dt != null)
+            {
+                for (int i = 0; i <= dt.Rows.Count; i++)
+                {
+                    for (int j = 0; j < dt.Columns.Count; j++)
+                    {
+                        if (i == 0)
+                            ws.Cells[i, j].PutValue(dt.Columns[j].Caption);
+                        else
+                            ws.Cells[i, j].PutValue(dt.Rows[(i - 1)][dt.Columns[j].Caption].ToString());
+
+                    }
+                }
+                ws.AutoFitColumns();
+                DataTableToExcel. WorkbookToExcel(wb, title + DateTime.Now.ToString("yy_MM_dd_HHmmss") + ".xls");
+
+            }
+        }
+
+
+        
 
         #endregion
 
