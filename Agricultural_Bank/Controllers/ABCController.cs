@@ -25,8 +25,8 @@ namespace Agricultural_Bank.Controllers
         /// <returns></returns>
         public ActionResult abcPayDemo()
         {
-            string orderNo = "ON201705110001";
-            string OrderAmount = "0.01";
+            string orderNo = "No" + DateTime.Now.Ticks.ToString();
+            string OrderAmount = "1.12";
 
             var  cc= abcUtil.abcMerChantPayment(orderNo, OrderAmount);
             if (cc .Contains("/"))
@@ -82,8 +82,9 @@ namespace Agricultural_Bank.Controllers
             //...
             //...
             //
-            ViewBag["MerchantFailureTxt"] = "接收通知失败，交易编号为：" + tOrderNo;  
-
+            var cc =  "接收通知失败，交易编号为：" + tOrderNo;
+            ViewData["MerchantFailureTxt"] = cc;  
+            
 
             return View();
 
@@ -99,7 +100,7 @@ namespace Agricultural_Bank.Controllers
             //...
             //...
             //
-            ViewBag["CustomerPageTxt"] = "已接收到通知，交易编号为：" + tOrderNo;
+            ViewData["CustomerPageTxt"] = "已接收到通知，交易编号为：" + tOrderNo;
 
             return View();
         }
@@ -116,7 +117,14 @@ namespace Agricultural_Bank.Controllers
 
             var cc = abcUtil.abcQueryOrder(OrderNo);
 
-
+            //01:未支付
+            //02:无回应
+            //03:已请款
+            //04:成功
+            //05:已退款
+            //07:授权确认成功
+            //00:授权已取消
+            //99:失败
             ViewData["strMessage"] = cc;
 
 

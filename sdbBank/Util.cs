@@ -380,7 +380,7 @@ namespace sdbBank
             {
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
-           return output.getDataValue("status").toString();
+                return output.toString() + " 订单号" + fixOrderID + ",下单时间" + timestamp;
             }
             else
             {
@@ -388,7 +388,7 @@ namespace sdbBank
                 //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
                 return output.getDataValue("errorMsg").toString();
             }
-            return output.toString()+" 订单号"+ fixOrderID+ "  下单时间" + timestamp;
+            return output.toString() ;
         }
 
 

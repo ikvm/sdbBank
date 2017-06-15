@@ -198,7 +198,7 @@ namespace sdbBank
 
                     YQKHKF04Model list = XmlDeserialize<YQKHKF04Model>(xmlstr);
                     var cc= list.Status;
-                    if (cc != "20" || cc != "30")
+                    if (cc != "20" & cc != "30")
                     {
                         return list.RetMsg;
                     }

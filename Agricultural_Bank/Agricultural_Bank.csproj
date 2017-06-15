@@ -66,8 +66,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="TrustPayClient">
-      <HintPath>..\lib\TrustPayClient.dll</HintPath>
+    <Reference Include="TrustPayClient, Version=1.0.2.27387, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\TrustPay\bin\Debug\TrustPayClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
