@@ -51,14 +51,14 @@ namespace Agricultural_Bank.Controllers
             //2、判断支付结果状态，进行后续操作
             if (tResult.isSuccess())
             {
-                //3、支付成功
-              
+                //3、支付成功  todo
+                //自己项目上的服务器地址
                 tMerchantPage = "http://localhost:4443/abc/CustomerPage?OrderNo=" + tResult.getValue("OrderNo");
             }
             else
             {
-                //4、支付失败
-             
+                //4、支付失败  todo
+                //自己项目上的服务器地址
                 tMerchantPage = "http://localhost:4443/abc/MerchantFailure?OrderNo=" + tResult.getValue("OrderNo");
             }
 
@@ -116,7 +116,7 @@ namespace Agricultural_Bank.Controllers
         {
 
             var cc = abcUtil.abcQueryOrder(OrderNo);
-
+            //状态
             //01:未支付
             //02:无回应
             //03:已请款

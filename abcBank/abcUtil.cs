@@ -84,7 +84,7 @@ namespace abcBank
             tPaymentRequest.dicOrder["OrderDesc"] = "订单说明";                   //设定订单说明
            tPaymentRequest.dicOrder["OrderURL"] = "";                   //设定订单地址
             tPaymentRequest.dicOrder["OrderDate"] = DateTime.Now.ToString("yyyy/MM/dd", System.Globalization.DateTimeFormatInfo.InvariantInfo); ;                   //设定订单日期 （必要信息 - YYYY/MM/DD）
-            tPaymentRequest.dicOrder["OrderTime"] = DateTime.Now.ToString("HH:MM:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo); ;                   //设定订单时间 （必要信息 - HH:MM:SS）
+            tPaymentRequest.dicOrder["OrderTime"] = DateTime.Now.ToString("HH:mm:ss", System.Globalization.DateTimeFormatInfo.InvariantInfo); ;                   //设定订单时间 （必要信息 - HH:MM:SS）
          tPaymentRequest.dicOrder["orderTimeoutDate"] = "20240619104901";                     //设定订单有效期
             tPaymentRequest.dicOrder["CommodityType"] = "0101";   //设置商品种类
 
