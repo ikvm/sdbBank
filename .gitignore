@@ -241,3 +241,8 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Pingan/log/*.*
+Web.config
+*.crt
+*.cer
+*.jks
+*.p12

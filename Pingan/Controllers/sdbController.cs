@@ -28,7 +28,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 系统探测
+        /// 系统探测 http://localhost:4113/sdb/sys
         /// </summary>
         /// <returns></returns>
         public ActionResult sys()
