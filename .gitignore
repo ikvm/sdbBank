@@ -246,3 +246,4 @@ Web.config
 *.cer
 *.jks
 *.p12
+*.config

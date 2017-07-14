@@ -154,6 +154,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Views\sdb\Index.cshtml" />
+    <Content Include="Web - 测试副本.config" />
     <None Include="Web References\BankService\BankService.wsdl" />
     <Content Include="Web References\BankService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
