@@ -247,3 +247,4 @@ Web.config
 *.jks
 *.p12
 *.config
+*.dll
