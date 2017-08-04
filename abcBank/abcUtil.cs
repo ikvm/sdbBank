@@ -91,15 +91,15 @@ namespace abcBank
 
             //3、添加订单明细
             System.Collections.Generic.Dictionary<string, string> orderitem = new System.Collections.Generic.Dictionary<string, string>();
-            orderitem["SubMerName"] = "慧生活二级商户1";    //设定二级商户名称
+            orderitem["SubMerName"] = "二级商户1";    //设定二级商户名称
             orderitem["SubMerId"] = "12345";    //设定二级商户代码
             orderitem["SubMerMCC"] = "0000";   //设定二级商户MCC码 
-            orderitem["SubMerchantRemarks"] = "慧生活";   //二级商户备注项
+            orderitem["SubMerchantRemarks"] = "Pay";   //二级商户备注项
             orderitem["ProductID"] = "IP000001";//商品代码，预留字段
-            orderitem["ProductName"] = "慧生活缴费";//商品名称            必须设定
+            orderitem["ProductName"] = "缴费";//商品名称            必须设定
             orderitem["UnitPrice"] = OrderAmount;//商品总价
             orderitem["Qty"] = "1";//商品数量
-            orderitem["ProductRemarks"] = "慧生活商品"; //商品备注项
+            orderitem["ProductRemarks"] = "生活商品"; //商品备注项
             orderitem["ProductType"] = "充值类";//商品类型
             orderitem["ProductDiscount"] = "1";//商品折扣
             orderitem["ProductExpiredDate"] = "10";//商品有效期
