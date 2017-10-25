@@ -11,11 +11,11 @@ namespace Pingan.Controllers
     public class sdbController : Controller
     {
         /// <summary>
-        /// 查询余额
+        /// 查询余额    11014803543008   http://localhost:4113/sdb/Index
         /// </summary>
         /// <param name="accountNo"></param>
         /// <returns></returns>
-        public ActionResult Index( string accountNo = "11014803543008")
+        public ActionResult Index( string accountNo = "11015072397004")
         {
         
             var oResult =  PinganQuery.YQ4001NormalQuery(accountNo);
@@ -76,7 +76,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 当日明细
+        /// 当日明细  http://localhost:4113/sdb/todayDetail4008?accountNo=11015072397004
         /// </summary>
         /// <param name="accountNo"></param>
         /// <returns></returns>

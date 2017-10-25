@@ -235,8 +235,9 @@ namespace Pingan.Controllers
         /// <returns></returns>
         public ActionResult UnionAPI_Submit(string orderID,string timestamp, string verifyCode="111111", string money = "0.1", string OpenId = "20003111462017051540429706")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-   
+           // string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            
+            string customerId = "39B6B340";
             decimal amount = Convert.ToDecimal(money);
             //短信验证码 verifyCode
             var cc = Util.UnionAPI_SubmitData(customerId, OpenId, amount, orderID, timestamp, verifyCode);
@@ -270,6 +271,72 @@ namespace Pingan.Controllers
             var cc = Util.UnionAPI_OPNCLData(customerId, OpenId);
             return Content("单个银行卡关闭(自行处理):" + cc);
         }
+
+
+
+        public ActionResult UnionBankOpenReturn()
+        {
+            var cc = Request.RawUrl;
+            String orig = this.Request["orig"];
+            String sign = this.Request["sign"];
+            MicroWeb.General.Common.LogResult("UnionBankOpenRawUrl如下" + cc);
+            MicroWeb.General.Common.LogResult("UnionBankOpen orig如下" + orig);
+            MicroWeb.General.Common.LogResult("UnionBankOpen sign如下" + sign);
+            String encoding = "GBK";
+            bool result = false;
+            //添加 远程验证服务 http://localhost:8080/axis2/services/BankService?wsdl
+            //   BankService.BankService ba = new BankService.BankService();
+            //   var webrsaVerfy = ba.JavaRsaVerify(orig, sign);
+            //    MicroWeb.General.Common.LogResult("JavaRsaVerify如下" + webrsaVerfy);
+            try
+            {
+                orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
+                sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
+
+
+                orig = Base64.DecodeBase64(orig, encoding);
+                sign = Base64.DecodeBase64(sign, encoding);
+
+
+                //     var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+                //      MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+
+                object[] obj = new object[2];
+                obj[0] = orig;
+                obj[1] = sign;
+                var wsdl = Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
+                MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
+                if (wsdl.toString() == "wsdlFail")
+                {
+                    return Content("验签出错,原因请查看sdbLocalVerifyUrl配置的地址能否访问，可自行返回银行卡列表!");
+                }
+
+                //  result = SignCheck.verifyData(orig, sign);
+                if (Convert.ToBoolean(wsdl.toString()))
+                //    if (result)
+                {
+                    KeyedCollection output = Util.parseOrigData(orig);
+
+                    MicroWeb.General.Common.LogResult("union 详细信息" + output);
+                    MicroWeb.General.Common.LogResult("union 状态" + output.getDataValue("status"));   //对银联来说 01为成功，02为失败
+                    //MicroWeb.General.Common.LogResult("订单号" + output.getDataValue("orderId"));
+                    //MicroWeb.General.Common.LogResult("商品描述" + output.getDataValue("objectName"));
+                    //MicroWeb.General.Common.LogResult("备注" + output.getDataValue("remark"));
+
+                    return Content("绑卡完成，请等待系统验证 状态码:" + output.getDataValue("status"));
+                }
+            }
+            catch (Exception e)
+            {
+                MicroWeb.General.Common.LogResult("UnionBankOpen返回测试报错" + e);
+                return Content("UnionBankOpen返回测试报错" + e.InnerException);
+
+            }
+
+            return Content("返回" + orig + "^^^^^" + sign);
+        }
+
+
 
 
         #endregion
@@ -381,15 +448,19 @@ namespace Pingan.Controllers
 
             String encoding = "GBK";
             //模拟银行返回通知原始数据，实际页面接收程序应为：
-
+        
             String orig = this.Request["orig"];
             String sign = this.Request["sign"];
 
-           //   orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0ic3RhdHVzIiB2YWx1%0AZT0iMDEiLz48ZmllbGQgaWQ9ImRhdGUiIHZhbHVlPSIyMDE0MDUwOTA4NTUwMiIvPjxmaWVsZCBp%0AZD0iY2hhcmdlIiB2YWx1ZT0iMTAiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDMx%0AMTE0NiIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDAzMTExNDYyMDE0MDUwOTI1OTk1%0AMTE0Ii8%2BPGZpZWxkIGlkPSJjdXJyZW5jeSIgdmFsdWU9IlJNQiIvPjxmaWVsZCBpZD0iYW1vdW50%0AIiB2YWx1ZT0iLjAxIi8%2BPGZpZWxkIGlkPSJwYXlkYXRlIiB2YWx1ZT0iMjAxNDA1MDkwODU1MzAi%0ALz48ZmllbGQgaWQ9InJlbWFyayIgdmFsdWU9IiIvPjxmaWVsZCBpZD0ib2JqZWN0TmFtZSIgdmFs%0AdWU9IktIcGF5Z2F0ZSIvPjxmaWVsZCBpZD0idmFsaWR0aW1lIiB2YWx1ZT0iMCIvPjwva0NvbGw%2B%0A";
+            MicroWeb.General.Common.LogResult("异步orig如下" + orig);
+            MicroWeb.General.Common.LogResult("异步sign如下" + sign);
+
+
+            //   orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0ic3RhdHVzIiB2YWx1%0AZT0iMDEiLz48ZmllbGQgaWQ9ImRhdGUiIHZhbHVlPSIyMDE0MDUwOTA4NTUwMiIvPjxmaWVsZCBp%0AZD0iY2hhcmdlIiB2YWx1ZT0iMTAiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDMx%0AMTE0NiIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDAzMTExNDYyMDE0MDUwOTI1OTk1%0AMTE0Ii8%2BPGZpZWxkIGlkPSJjdXJyZW5jeSIgdmFsdWU9IlJNQiIvPjxmaWVsZCBpZD0iYW1vdW50%0AIiB2YWx1ZT0iLjAxIi8%2BPGZpZWxkIGlkPSJwYXlkYXRlIiB2YWx1ZT0iMjAxNDA1MDkwODU1MzAi%0ALz48ZmllbGQgaWQ9InJlbWFyayIgdmFsdWU9IiIvPjxmaWVsZCBpZD0ib2JqZWN0TmFtZSIgdmFs%0AdWU9IktIcGF5Z2F0ZSIvPjxmaWVsZCBpZD0idmFsaWR0aW1lIiB2YWx1ZT0iMCIvPjwva0NvbGw%2B%0A";
             //模拟银行返回通知原始数据，实际页面接收程序应为：
-      
-           //   sign = "MjY5YzJlMDBhMzcyZTJkNWJjYjAxMzhmNGMxNmRkNDVjNjVjYTY3YzhiMjc1NTZhNTk0MTI0MzE5%0AN2Q1MWZkNWI5OTMxNzJhZTJiZDEyNDNmMjE3ZTk4MjU1N2E2YzAzOGI1YjI2YTQ0ZWU0M2EyNjUx%0AZTdmNjk2NDMzMDZhNTM5Y2NjMDM0YzJjZjJjZGE2ZjZlOTE1NTU3MzE1NzYxOGE4NGI1YTAwNTZi%0AODg4ZjVlMDdlMmNjODlmNzUyNzVmMGFmZDAzMWY4MDg3MjRjNjc0ZGE0MmRjNjYzNTM1YjM2MDFi%0ANDA4ZjllYWI4YjgxNDI4Y2E4NWM1NjMxMzA2ZA%3D%3D%0A";
-           // bool result = false;
+
+            //   sign = "MjY5YzJlMDBhMzcyZTJkNWJjYjAxMzhmNGMxNmRkNDVjNjVjYTY3YzhiMjc1NTZhNTk0MTI0MzE5%0AN2Q1MWZkNWI5OTMxNzJhZTJiZDEyNDNmMjE3ZTk4MjU1N2E2YzAzOGI1YjI2YTQ0ZWU0M2EyNjUx%0AZTdmNjk2NDMzMDZhNTM5Y2NjMDM0YzJjZjJjZGE2ZjZlOTE1NTU3MzE1NzYxOGE4NGI1YTAwNTZi%0AODg4ZjVlMDdlMmNjODlmNzUyNzVmMGFmZDAzMWY4MDg3MjRjNjc0ZGE0MmRjNjYzNTM1YjM2MDFi%0ANDA4ZjllYWI4YjgxNDI4Y2E4NWM1NjMxMzA2ZA%3D%3D%0A";
+            // bool result = false;
 
             try
             {

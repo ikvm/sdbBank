@@ -691,19 +691,19 @@ namespace sdbBank
             String fromOrig = null;
    String fromSign = null;
             String encoding = "GBK";
-            MicroWeb.General.Common.LogResult("toOrig为" + toOrig);
+       //     MicroWeb.General.Common.LogResult("toOrig为" + toOrig);
             String toSign = MD5WithRSA.sdbPaySign(toOrig);
 
-            MicroWeb.General.Common.LogResult("toSign^^MD5WithRSA加密后" + toSign);
+    //        MicroWeb.General.Common.LogResult("toSign^^MD5WithRSA加密后" + toSign);
             String toSignData = Base64.EncodeBase64(toSign, encoding);
-            MicroWeb.General.Common.LogResult("toSignData^^EncodeBase64后" + toSignData);
+   //         MicroWeb.General.Common.LogResult("toSignData^^EncodeBase64后" + toSignData);
             String toOrigData = Base64.EncodeBase64(toOrig, encoding);
-            MicroWeb.General.Common.LogResult("toOrigData^^EncodeBase64后" + toOrigData);
+  //          MicroWeb.General.Common.LogResult("toOrigData^^EncodeBase64后" + toOrigData);
             toSignData = System.Web.HttpUtility.UrlEncode(toSignData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后原始数据,再做URL转码
            toOrigData = System.Web.HttpUtility.UrlEncode(toOrigData, Encoding.GetEncoding("GBK"));  //Base64Encode转码后签名数据,再做URL转码
 
-            MicroWeb.General.Common.LogResult("toSignData^^URL转码" + toSignData);
-            MicroWeb.General.Common.LogResult("toOrigData^^URL转码" + toOrigData);
+       //     MicroWeb.General.Common.LogResult("toSignData^^URL转码" + toSignData);
+     //       MicroWeb.General.Common.LogResult("toOrigData^^URL转码" + toOrigData);
             string aOutputData = null;
 
 
@@ -713,12 +713,12 @@ namespace sdbBank
           aOutputData = "orig=" + toOrigData + "&sign=" + toSignData + "&businessCode=" + businessCode.getBytes(encoding);
          //    aOutputData = "orig=" + a + "&sign=" + b + "&businessCode=" + businessCode.getBytes(encoding);
 
-            MicroWeb.General.Common.LogResult("aOutputData为" + aOutputData);
+          //  MicroWeb.General.Common.LogResult("aOutputData为" + aOutputData);
 
 
             var response =  PAHelper.NcPostUnionNew(toUrl, aOutputData);
 
-            MicroWeb.General.Common.LogResult("response为" + response);
+         //   MicroWeb.General.Common.LogResult("response为" + response);
 
             Properties res = parseStringToProperties(response, "\r\n");
             fromSign = ((String)res.get("sign")).trim();
@@ -729,7 +729,7 @@ namespace sdbBank
             fromSign = Base64.DecodeBase64(fromSign, encoding);
             fromOrig = Base64.DecodeBase64(fromOrig, encoding);
 
-            MicroWeb.General.Common.LogResult("fromSign为" + fromSign);
+      //      MicroWeb.General.Common.LogResult("fromSign为" + fromSign);
             MicroWeb.General.Common.LogResult("fromOrig为" + fromOrig);
             try
             {
