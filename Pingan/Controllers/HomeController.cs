@@ -273,7 +273,10 @@ namespace Pingan.Controllers
         }
 
 
-
+        /// <summary>
+        /// 银行卡开通后返回 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult UnionBankOpenReturn()
         {
             var cc = Request.RawUrl;
