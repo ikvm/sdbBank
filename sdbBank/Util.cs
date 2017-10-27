@@ -431,7 +431,7 @@ namespace sdbBank
 
             String errorCode = (String)output.getDataValue("errorCode");
             String errorMsg = (String)output.getDataValue("errorMsg");
-
+            MicroWeb.General.Common.LogResult("UnionAPI_SubmitData  output为" + output);
 
             if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
             {

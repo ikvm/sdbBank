@@ -459,30 +459,44 @@ namespace Pingan.Controllers
             MicroWeb.General.Common.LogResult("异步sign如下" + sign);
 
 
-            //   orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0ic3RhdHVzIiB2YWx1%0AZT0iMDEiLz48ZmllbGQgaWQ9ImRhdGUiIHZhbHVlPSIyMDE0MDUwOTA4NTUwMiIvPjxmaWVsZCBp%0AZD0iY2hhcmdlIiB2YWx1ZT0iMTAiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDMx%0AMTE0NiIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDAzMTExNDYyMDE0MDUwOTI1OTk1%0AMTE0Ii8%2BPGZpZWxkIGlkPSJjdXJyZW5jeSIgdmFsdWU9IlJNQiIvPjxmaWVsZCBpZD0iYW1vdW50%0AIiB2YWx1ZT0iLjAxIi8%2BPGZpZWxkIGlkPSJwYXlkYXRlIiB2YWx1ZT0iMjAxNDA1MDkwODU1MzAi%0ALz48ZmllbGQgaWQ9InJlbWFyayIgdmFsdWU9IiIvPjxmaWVsZCBpZD0ib2JqZWN0TmFtZSIgdmFs%0AdWU9IktIcGF5Z2F0ZSIvPjxmaWVsZCBpZD0idmFsaWR0aW1lIiB2YWx1ZT0iMCIvPjwva0NvbGw%2B%0A";
+        orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0iZXJyb3JDb2RlIiB2YWx1ZT0iVUtIUEFZMzQiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iZXJyb3JNc2ciIHZhbHVlPSLS+NDQsrvWp7PWIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDczOTc1NiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJwbGFudEJhbmtJZCIgdmFsdWU9Im51bGwwMSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJzdGF0dXMiIHZhbHVlPSIwMiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJkYXRlIiB2YWx1ZT0iMjAxNzEwMjcxNTI3MzIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iYWNjTm8iIHZhbHVlPSI4ODE0IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InRlbGVwaG9uZSIgdmFsdWU9IjEzNSoqKiozODUwIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImN1c3RvbWVySWQiIHZhbHVlPSIzQjk5MTdBQSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJPcGVuSWQiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDA3Mzk3NTYyMDE3MTAyNzEyMjU1MjI1IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImJhbmtUeXBlIiB2YWx1ZT0iIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InBsYW50QmFua05hbWUiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjwva0NvbGw+";
             //模拟银行返回通知原始数据，实际页面接收程序应为：
 
-            //   sign = "MjY5YzJlMDBhMzcyZTJkNWJjYjAxMzhmNGMxNmRkNDVjNjVjYTY3YzhiMjc1NTZhNTk0MTI0MzE5%0AN2Q1MWZkNWI5OTMxNzJhZTJiZDEyNDNmMjE3ZTk4MjU1N2E2YzAzOGI1YjI2YTQ0ZWU0M2EyNjUx%0AZTdmNjk2NDMzMDZhNTM5Y2NjMDM0YzJjZjJjZGE2ZjZlOTE1NTU3MzE1NzYxOGE4NGI1YTAwNTZi%0AODg4ZjVlMDdlMmNjODlmNzUyNzVmMGFmZDAzMWY4MDg3MjRjNjc0ZGE0MmRjNjYzNTM1YjM2MDFi%0ANDA4ZjllYWI4YjgxNDI4Y2E4NWM1NjMxMzA2ZA%3D%3D%0A";
+             sign = "YzZmMDEzMzM5YTc0MjEyMmM1MTBmNzU1OWU5NjM2MmI3YzAzNjllZjVmNDJmZTFhMTZkN2M2YTk3NGE4YjgyMzE2ZjRjZmU4YjdlMDQ0NjQ5ZjJlMDQ2MzMzZmUwYzM4NzBmOTJkMjFhMmYzODkxZTE1ZjU4NzZjZGNkZGY1MWIyYTEyMDczMjU2ZDU3NjFlMmFkOTQ1YWRhNWIyYzY3YjMwMzM2YzBjYjc3MDFlNjMyMDhkYjQ1ZDIwMWI5MTM2ZDY0MjgxYzgxZmIwMDAxNTUzY2FkZTk4N2JmNTdmMDllMmZjMzcyNmJmZDNhNTg4NTQ4Y2I3NDMyMDkxMjlhZg==";
             // bool result = false;
 
             try
             {
-                orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
-                sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
+             //   orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
+           //     sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
 
 
                 orig = Base64.DecodeBase64(orig, encoding);
                 sign = Base64.DecodeBase64(sign, encoding);
 
-                 //此方法固定，改成上面动态的方法 
-              //  result = SignCheck.verifyData(orig, sign);
-                BankService.BankService ba = new BankService.BankService();
-                var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
-                MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
-                if (webrsaVerfyDecode)
+                //此方法固定，改成上面动态的方法 
+                //  result = SignCheck.verifyData(orig, sign);
+                //BankService.BankService ba = new BankService.BankService();
+                //var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+                //MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+
+                object[] obj = new object[2];
+                obj[0] = orig;
+                obj[1] = sign;
+                var wsdl = Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
+                MicroWeb.General.Common.LogResult("sdbReturnNotify如下" + wsdl);
+                if (wsdl.toString() == "wsdlFail")
                 {
                     KeyedCollection output = Util.parseOrigData(orig);
-                    return Content("完成，请等待系统验证，备注字段" + output.getDataValue("remark"));
+                    return Content("验签出错，提示信息" + output.getDataValue("errorMsg"));
+               //     return Content("验签出错,其它信息"+ orig.toString());
+                }
+
+
+                if (Convert.ToBoolean(wsdl.toString()))
+                {
+                    KeyedCollection output = Util.parseOrigData(orig);
+                    return Content("完成，请等待系统验证，errorMsg信息(为空则正常):" + output.getDataValue("errorMsg"));
                     //做具体业务操作
                 }
             }
