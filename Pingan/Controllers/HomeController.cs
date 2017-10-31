@@ -164,14 +164,14 @@ namespace Pingan.Controllers
 
 
         //银行卡开通  localhost:4113/home/UnionAPI_OpenDemo
-        public ActionResult UnionAPI_OpenDemo()
+        public ActionResult UnionAPI_OpenDemo( string customerId = "SH00001")
         {
             String orig = "";  //原始数据
             String sign = "";  //签名数据
             String encoding = "GBK";
             try
             {
-                string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+                //商户会员号customerId  ，自己业务中的,不超过30位
                 orig = Util.CreateUnionAPI_OpenString(customerId);
 
                 sign = MD5WithRSA.sdbPaySign(orig);
@@ -190,12 +190,12 @@ namespace Pingan.Controllers
         }
 
         /// <summary>
-        /// 单个银行卡开通查询  http://localhost:4113/home/UnionAPI_QueryOPNQuery
+        /// 单个银行卡开通查询  http://localhost:4113/home/UnionAPI_QueryOPNQuery?customerId=3B9917AA
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_QueryOPNQuery(string accNo= "6226330151030000")
+        public ActionResult UnionAPI_QueryOPNQuery(string customerId = "SH00001",string accNo= "6226330151030000")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+            //商户会员号  ，自己业务中的,不超过30位
             var cc = Util.UnionAPI_QueryOPNData(customerId, accNo);
             return Content("单个银行卡开通查询(自行处理):" + cc);
         }
@@ -203,12 +203,12 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 已开通银行卡列表查询接口  localhost:4113/home/UnionAPI_OpenedQuery
+        /// 已开通银行卡列表查询接口  localhost:4113/home/UnionAPI_OpenedQuery?customerId=3B9917AA
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_OpenedQuery()
+        public ActionResult UnionAPI_OpenedQuery( string customerId = "SH00001")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+               //商户会员号  ，自己业务中的,不超过30位
             var cc = Util.UnionAPI_OpenedData(customerId);
             return Content("已开通银行卡列表(自行处理):" + cc);
         }
@@ -217,9 +217,9 @@ namespace Pingan.Controllers
         /// 发送验证码
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_SSMS(string   money="0.1",string OpenId = "20003111462017051540429706")
+        public ActionResult UnionAPI_SSMS(string customerId = "SH00001",  string   money="0.1",string OpenId = "20007397562017102727033897")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+           ;   //商户会员号  ，自己业务中的,不超过30位
             //OpenId为银行卡开通ID 
             decimal amount = Convert.ToDecimal(money);   //单笔支付不能小于0.1元
 
@@ -233,11 +233,10 @@ namespace Pingan.Controllers
         /// 发起后台支付交易   orderID timestamp  来源上次发送sms时得到的  http://localhost:4113/home/UnionAPI_Submit?orderID=20003111462017053147225799&timestamp=20170531153503
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_Submit(string orderID,string timestamp, string verifyCode="111111", string money = "0.1", string OpenId = "20003111462017051540429706")
+        public ActionResult UnionAPI_Submit(string orderID,string timestamp, string verifyCode="111111", string money = "0.1", string OpenId = "20003111462017051540429706",string customerId = "3B9917AA")
         {
            // string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
-            
-            string customerId = "39B6B340";
+       
             decimal amount = Convert.ToDecimal(money);
             //短信验证码 verifyCode
             var cc = Util.UnionAPI_SubmitData(customerId, OpenId, amount, orderID, timestamp, verifyCode);
@@ -247,12 +246,12 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 后台支付交易结果   orderID    来源上次发送sms时得到的  http://localhost:4113/home/UnionAPI_OrderQuery?orderID=20003111462017053147225799 
+        /// 后台支付交易结果   orderID来源于上次发送sms时得到的。按文档需要每次都不同?    http://localhost:4113/home/UnionAPI_OrderQuery?orderID=20003111462017053147225799 
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_OrderQuery(string orderID )
+        public ActionResult UnionAPI_OrderQuery(string customerId = "SH00001",string orderID= "20003111462017053147225799 ")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+           //商户会员号  ，自己业务中的,不超过30位
       
             var cc = Util.UUnionAPI_OrderQueryData(customerId,   orderID );
             return Content("后台支付交易结果:" + cc);
@@ -265,16 +264,23 @@ namespace Pingan.Controllers
         /// 单个银行卡关闭  http://localhost:4113/home/UnionAPI_OPNCL
         /// </summary>
         /// <returns></returns>
-        public ActionResult UnionAPI_OPNCL(string OpenId = "20003111462017051540429706")
+        public ActionResult UnionAPI_OPNCL(string customerId = "SH00001",string OpenId = "20003111462017051540429706")
         {
-            string customerId = "SH00001";   //商户会员号  ，自己业务中的,不超过30位
+             //商户会员号  ，自己业务中的,不超过30位
             var cc = Util.UnionAPI_OPNCLData(customerId, OpenId);
             return Content("单个银行卡关闭(自行处理):" + cc);
         }
 
 
+
+
+        #endregion
+
+
+        #region 支付回调
+
         /// <summary>
-        /// 银行卡开通后返回 
+        /// 银行卡开通后返回页面(前台) 
         /// </summary>
         /// <returns></returns>
         public ActionResult UnionBankOpenReturn()
@@ -311,7 +317,7 @@ namespace Pingan.Controllers
                 MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
                 if (wsdl.toString() == "wsdlFail")
                 {
-                    return Content("验签出错,原因请查看sdbLocalVerifyUrl配置的地址能否访问，可自行返回银行卡列表!");
+                    return Content("验签出错,原因请查看sdbLocalVerifyUrl配置的地址能否访问，用户可自行返回银行卡列表!");
                 }
 
                 //  result = SignCheck.verifyData(orig, sign);
@@ -331,8 +337,78 @@ namespace Pingan.Controllers
             }
             catch (Exception e)
             {
-                MicroWeb.General.Common.LogResult("UnionBankOpen返回测试报错" + e);
-                return Content("UnionBankOpen返回测试报错" + e.InnerException);
+                MicroWeb.General.Common.LogResult("UnionBankOpen返回报错" + e);
+                return Content("UnionBankOpen返回报错" + e.InnerException);
+
+            }
+
+            return Content("UnionBankOpenReturn 直接返回" + orig + "^^^^^" + sign);
+        }
+
+
+
+
+
+
+
+
+        //支付完，前台访问
+        public ActionResult sdbReturn()
+        {
+            var cc = Request.RawUrl;
+            String orig = this.Request["orig"];
+            String sign = this.Request["sign"];
+            MicroWeb.General.Common.LogResult("RawUrl如下" + cc);
+            MicroWeb.General.Common.LogResult("orig如下" + orig);
+            MicroWeb.General.Common.LogResult("sign如下" + sign);
+            String encoding = "GBK";
+            bool result = false;
+            //添加 远程验证服务 http://localhost:8080/axis2/services/BankService?wsdl
+            //   BankService.BankService ba = new BankService.BankService();
+            //   var webrsaVerfy = ba.JavaRsaVerify(orig, sign);
+            //    MicroWeb.General.Common.LogResult("JavaRsaVerify如下" + webrsaVerfy);
+            try
+            {
+                orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
+                sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
+
+                //前台通知解析需要先进行URLDecoder解码，再进行Base64Decode解码， GBK编码。
+                orig = Base64.DecodeBase64(orig, encoding);
+                sign = Base64.DecodeBase64(sign, encoding);
+
+
+                //     var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+                //      MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+
+                object[] obj = new object[2];
+                obj[0] = orig;
+                obj[1] = sign;
+                var wsdl = Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
+                MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
+                if (wsdl.toString() == "wsdlFail")
+                {
+                    return Content("验签出错,原因1查看sdbLocalVerifyUrl配置的地址能否访问");
+                }
+
+                //  result = SignCheck.verifyData(orig, sign);
+                if (Convert.ToBoolean(wsdl.toString()))
+                //    if (result)
+                {
+                    KeyedCollection output = Util.parseOrigData(orig);
+
+                    MicroWeb.General.Common.LogResult("订单详细信息" + output);
+                    MicroWeb.General.Common.LogResult("订单状态" + output.getDataValue("status"));   //对银联来说 01为成功，02为失败
+                    MicroWeb.General.Common.LogResult("订单号" + output.getDataValue("orderId"));
+                    MicroWeb.General.Common.LogResult("商品描述" + output.getDataValue("objectName"));
+                    MicroWeb.General.Common.LogResult("备注" + output.getDataValue("remark"));
+
+                    return Content("完成，请等待系统验证，备注字段" + output.getDataValue("remark"));
+                }
+            }
+            catch (Exception e)
+            {
+                MicroWeb.General.Common.LogResult("返回测试报错" + e);
+                return Content("返回测试报错" + e.InnerException);
 
             }
 
@@ -341,8 +417,74 @@ namespace Pingan.Controllers
 
 
 
+        //此为支付后 后台访问
+        public ActionResult sdbReturnNotify()
+        {
+
+            String encoding = "GBK";
+            //模拟银行返回通知原始数据，实际页面接收程序应为：
+
+            String orig = this.Request["orig"];
+            String sign = this.Request["sign"];
+
+            MicroWeb.General.Common.LogResult("异步orig如下" + orig);
+            MicroWeb.General.Common.LogResult("异步sign如下" + sign);
+
+
+            orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0iZXJyb3JDb2RlIiB2YWx1ZT0iVUtIUEFZMzQiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iZXJyb3JNc2ciIHZhbHVlPSLS+NDQsrvWp7PWIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDczOTc1NiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJwbGFudEJhbmtJZCIgdmFsdWU9Im51bGwwMSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJzdGF0dXMiIHZhbHVlPSIwMiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJkYXRlIiB2YWx1ZT0iMjAxNzEwMjcxNTI3MzIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iYWNjTm8iIHZhbHVlPSI4ODE0IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InRlbGVwaG9uZSIgdmFsdWU9IjEzNSoqKiozODUwIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImN1c3RvbWVySWQiIHZhbHVlPSIzQjk5MTdBQSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJPcGVuSWQiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDA3Mzk3NTYyMDE3MTAyNzEyMjU1MjI1IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImJhbmtUeXBlIiB2YWx1ZT0iIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InBsYW50QmFua05hbWUiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjwva0NvbGw+";
+            //模拟银行返回通知原始数据，实际页面接收程序应为：
+
+            sign = "YzZmMDEzMzM5YTc0MjEyMmM1MTBmNzU1OWU5NjM2MmI3YzAzNjllZjVmNDJmZTFhMTZkN2M2YTk3NGE4YjgyMzE2ZjRjZmU4YjdlMDQ0NjQ5ZjJlMDQ2MzMzZmUwYzM4NzBmOTJkMjFhMmYzODkxZTE1ZjU4NzZjZGNkZGY1MWIyYTEyMDczMjU2ZDU3NjFlMmFkOTQ1YWRhNWIyYzY3YjMwMzM2YzBjYjc3MDFlNjMyMDhkYjQ1ZDIwMWI5MTM2ZDY0MjgxYzgxZmIwMDAxNTUzY2FkZTk4N2JmNTdmMDllMmZjMzcyNmJmZDNhNTg4NTQ4Y2I3NDMyMDkxMjlhZg==";
+            // bool result = false;
+
+            try
+            {
+                //   orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
+                //     sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
+                //后台通知解析直接进行Base64Decode解码， GBK编码。
+
+                orig = Base64.DecodeBase64(orig, encoding);
+                sign = Base64.DecodeBase64(sign, encoding);
+
+                //此方法固定，改成上面动态的方法 
+                //  result = SignCheck.verifyData(orig, sign);
+                //BankService.BankService ba = new BankService.BankService();
+                //var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
+                //MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
+
+                object[] obj = new object[2];
+                obj[0] = orig;
+                obj[1] = sign;
+                var wsdl = Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
+                MicroWeb.General.Common.LogResult("sdbReturnNotify如下" + wsdl);
+                if (wsdl.toString() == "wsdlFail")
+                {
+                    KeyedCollection output = Util.parseOrigData(orig);
+                    return Content("验签出错，提示信息" + output.getDataValue("errorMsg"));
+                    //     return Content("验签出错,其它信息"+ orig.toString());
+                }
+
+
+                if (Convert.ToBoolean(wsdl.toString()))
+                {
+                    KeyedCollection output = Util.parseOrigData(orig);
+                    return Content("完成，请等待系统验证，errorMsg信息(后面为空则正常):" + output.getDataValue("errorMsg"));
+                    //做具体业务操作
+                }
+            }
+            catch (Exception e)
+            {
+                return Content("返回测试报错" + e);
+
+            }
+
+
+            return Content("返回测试");
+        }
 
         #endregion
+
+
 
         #region 网关支付
 
@@ -383,132 +525,7 @@ namespace Pingan.Controllers
             return Content(sHtmlText);
         }
 
-        public ActionResult sdbReturn()
-        {
-            var cc = Request.RawUrl;
-            String orig = this.Request["orig"];
-            String sign = this.Request["sign"];
-            MicroWeb.General.Common.LogResult("RawUrl如下" + cc);
-            MicroWeb.General.Common.LogResult("orig如下" + orig);
-            MicroWeb.General.Common.LogResult("sign如下" + sign);
-            String encoding = "GBK";
-            bool result = false;
-            //添加 远程验证服务 http://localhost:8080/axis2/services/BankService?wsdl
-         //   BankService.BankService ba = new BankService.BankService();
-         //   var webrsaVerfy = ba.JavaRsaVerify(orig, sign);
-        //    MicroWeb.General.Common.LogResult("JavaRsaVerify如下" + webrsaVerfy);
-            try
-            {
-                orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
-                sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
 
-
-                orig = Base64.DecodeBase64(orig, encoding);
-                sign = Base64.DecodeBase64(sign, encoding);
-
-
-           //     var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
-          //      MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
-
-                object[] obj=new object[2];
-                obj[0] = orig;
-                obj[1] = sign;
-              var wsdl=  Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
-                MicroWeb.General.Common.LogResult("JavaRsaVerifyDecode如下" + wsdl);
-                if (wsdl.toString() == "wsdlFail")
-                {
-                    return Content("验签出错,原因1查看sdbLocalVerifyUrl配置的地址能否访问");
-                }
-
-                //  result = SignCheck.verifyData(orig, sign);
-                if (Convert.ToBoolean(wsdl.toString()))
-                //    if (result)
-                {
-                    KeyedCollection output = Util.parseOrigData(orig);
-
-                    MicroWeb.General.Common.LogResult("订单详细信息" + output);
-                    MicroWeb.General.Common.LogResult("订单状态" + output.getDataValue("status"));   //对银联来说 01为成功，02为失败
-                    MicroWeb.General.Common.LogResult("订单号" + output.getDataValue("orderId"));
-                    MicroWeb.General.Common.LogResult("商品描述" + output.getDataValue("objectName"));
-                    MicroWeb.General.Common.LogResult("备注" + output.getDataValue("remark"));
-                   
-                    return Content("完成，请等待系统验证，备注字段"+ output.getDataValue("remark"));
-                }
-            }
-            catch (Exception e)
-            {
-                MicroWeb.General.Common.LogResult("返回测试报错" + e);
-                return Content("返回测试报错" + e.InnerException);
-
-            }
-             
-  return Content("返回" + orig + "^^^^^" + sign );
-        }
-  
-
-        public ActionResult sdbReturnNotify()
-        {
-
-            String encoding = "GBK";
-            //模拟银行返回通知原始数据，实际页面接收程序应为：
-        
-            String orig = this.Request["orig"];
-            String sign = this.Request["sign"];
-
-            MicroWeb.General.Common.LogResult("异步orig如下" + orig);
-            MicroWeb.General.Common.LogResult("异步sign如下" + sign);
-
-
-        orig = "PGtDb2xsIGlkPSJvdXRwdXQiIGFwcGVuZD0iZmFsc2UiPjxmaWVsZCBpZD0iZXJyb3JDb2RlIiB2YWx1ZT0iVUtIUEFZMzQiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iZXJyb3JNc2ciIHZhbHVlPSLS+NDQsrvWp7PWIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9Im1hc3RlcklkIiB2YWx1ZT0iMjAwMDczOTc1NiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJwbGFudEJhbmtJZCIgdmFsdWU9Im51bGwwMSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJzdGF0dXMiIHZhbHVlPSIwMiIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJkYXRlIiB2YWx1ZT0iMjAxNzEwMjcxNTI3MzIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0iYWNjTm8iIHZhbHVlPSI4ODE0IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InRlbGVwaG9uZSIgdmFsdWU9IjEzNSoqKiozODUwIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImN1c3RvbWVySWQiIHZhbHVlPSIzQjk5MTdBQSIgcmVxdWlyZWQ9ImZhbHNlIi8+PGZpZWxkIGlkPSJPcGVuSWQiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjxmaWVsZCBpZD0ib3JkZXJJZCIgdmFsdWU9IjIwMDA3Mzk3NTYyMDE3MTAyNzEyMjU1MjI1IiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9ImJhbmtUeXBlIiB2YWx1ZT0iIiByZXF1aXJlZD0iZmFsc2UiLz48ZmllbGQgaWQ9InBsYW50QmFua05hbWUiIHZhbHVlPSIiIHJlcXVpcmVkPSJmYWxzZSIvPjwva0NvbGw+";
-            //模拟银行返回通知原始数据，实际页面接收程序应为：
-
-             sign = "YzZmMDEzMzM5YTc0MjEyMmM1MTBmNzU1OWU5NjM2MmI3YzAzNjllZjVmNDJmZTFhMTZkN2M2YTk3NGE4YjgyMzE2ZjRjZmU4YjdlMDQ0NjQ5ZjJlMDQ2MzMzZmUwYzM4NzBmOTJkMjFhMmYzODkxZTE1ZjU4NzZjZGNkZGY1MWIyYTEyMDczMjU2ZDU3NjFlMmFkOTQ1YWRhNWIyYzY3YjMwMzM2YzBjYjc3MDFlNjMyMDhkYjQ1ZDIwMWI5MTM2ZDY0MjgxYzgxZmIwMDAxNTUzY2FkZTk4N2JmNTdmMDllMmZjMzcyNmJmZDNhNTg4NTQ4Y2I3NDMyMDkxMjlhZg==";
-            // bool result = false;
-
-            try
-            {
-             //   orig = System.Web.HttpUtility.UrlDecode(orig, Encoding.GetEncoding("GBK"));
-           //     sign = System.Web.HttpUtility.UrlDecode(sign, Encoding.GetEncoding("GBK"));
-
-
-                orig = Base64.DecodeBase64(orig, encoding);
-                sign = Base64.DecodeBase64(sign, encoding);
-
-                //此方法固定，改成上面动态的方法 
-                //  result = SignCheck.verifyData(orig, sign);
-                //BankService.BankService ba = new BankService.BankService();
-                //var webrsaVerfyDecode = ba.JavaRsaVerifyDecode(orig, sign);
-                //MicroWeb.General.Common.LogResult("webrsaVerfyDecode" + webrsaVerfyDecode);
-
-                object[] obj = new object[2];
-                obj[0] = orig;
-                obj[1] = sign;
-                var wsdl = Util.CallWebServiceObj("JavaRsaVerifyDecode", obj);   //用动态调用java的方式验签
-                MicroWeb.General.Common.LogResult("sdbReturnNotify如下" + wsdl);
-                if (wsdl.toString() == "wsdlFail")
-                {
-                    KeyedCollection output = Util.parseOrigData(orig);
-                    return Content("验签出错，提示信息" + output.getDataValue("errorMsg"));
-               //     return Content("验签出错,其它信息"+ orig.toString());
-                }
-
-
-                if (Convert.ToBoolean(wsdl.toString()))
-                {
-                    KeyedCollection output = Util.parseOrigData(orig);
-                    return Content("完成，请等待系统验证，errorMsg信息(为空则正常):" + output.getDataValue("errorMsg"));
-                    //做具体业务操作
-                }
-            }
-            catch (Exception e)
-            {
-                return Content("返回测试报错" + e);
-
-            }
-
-
-            return Content("返回测试" );
-        }
 
 
         #endregion
@@ -518,7 +535,7 @@ namespace Pingan.Controllers
 
 
         /// <summary>
-        /// 单笔订单状态查询  http://localhost:4113/home/KH0001Result?OrderNO=20003111462017031115495117
+        /// 单笔订单状态查询  http://localhost:4113/home/KH0001Result?OrderNO=20007397562017102472321042
         /// </summary>
         /// <returns></returns>
         public ActionResult KH0001Result(string OrderNO = "")
@@ -526,7 +543,7 @@ namespace Pingan.Controllers
          
          var cc=   Util.KH0001Data(OrderNO);
 
-            return Content("返回KH0001对帐结果:"+ cc);
+            return Content("未页面处理,需要F12,查看返回KH0001对帐结果:"+ cc);
         }
 
         /// <summary>
@@ -536,7 +553,7 @@ namespace Pingan.Controllers
         /// <param name="endDate"></param>
         /// <returns></returns>
 
-        public ActionResult KH0002Result(string beginDate = "20170601000000", string endDate= "20170607240000",string excel="false")
+        public ActionResult KH0002Result(string beginDate = "20171001000000", string endDate= "20171031240000",string excel="false")
         {
             if (excel == "true")
             {
@@ -562,7 +579,7 @@ namespace Pingan.Controllers
 
             var cc = Util.KH0003Data( Date);
 
-            return Content("返回KH0003对帐结果:" + cc);
+            return Content("未页面处理,需要F12,查看 返回KH0003对帐结果:" + cc);
         }
 
 

@@ -805,6 +805,7 @@ namespace sdbBank
 
             if ((errorCode == null || errorCode.Equals("")) && (errorMsg == null || errorMsg.Equals("")))
             {
+              //  return output.getDataValue("status").ToString();
                 //System.out.println("---订单状态---" + output.getDataValue("status"));
                 //System.out.println("---支付完成时间---" + output.getDataValue("date"));
                 //System.out.println("---手续费金额---" + output.getDataValue("charge"));
@@ -823,8 +824,9 @@ namespace sdbBank
             }
             else
             {
-             //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
-            //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
+              //  return output.getDataValue("errorCode").ToString()+ output.getDataValue("errorMsg").ToString();
+                //   System.out.println("---错误码---" + output.getDataValue("errorCode"));
+                //    System.out.println("---错误说明---" + output.getDataValue("errorMsg"));
             }
             return output.toString();
         }
