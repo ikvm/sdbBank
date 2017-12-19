@@ -67,8 +67,7 @@ namespace sdbBank
         /// <returns></returns>
         public static string CreatePayorigStringTest()
         {
-         
-            KeyedCollection inputOrig = new KeyedCollection("output");
+             KeyedCollection inputOrig = new KeyedCollection("output");
             inputOrig.put("status", "01");  
             inputOrig.put("date", "20140509085502");
             inputOrig.put("charge", "10");
